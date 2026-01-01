@@ -1,10 +1,34 @@
 {
     "name": "Fabulous F# for Dev",
-    "image": "mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64",
-    //"image": "mcr.microsoft.com/dotnet/sdk:8.0.416-alpine3.23-amd64",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": ".." },
+    "containerEnv": {
+        "ANDROID_SDK_ROOT": "/opt/android",
+        "ANDROID_SDK_HOME": "/opt/android/home",
+        "DEVICE": "pixel_9"
+    },
+    "runArgs": [
+        "-p", "5555:5555",
+        "-p", "5554:5554",
+        "-p", "6080:6080"
+    ],
+    
+    // "image": "mcr.microsoft.com/dotnet/sdk:8.0.416-alpine3.23-amd64",
+    // "image": "mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64",
+    // "image": "mcr.microsoft.com/dotnet/sdk:10.0.101-noble",
     "workspaceMount": "type=bind,source=${localWorkspaceFolder}/BookHoundApp,target=/workspaces/BookHoundApp,consistency=cached",
     "workspaceFolder": "/workspaces/BookHoundApp",
-    "postCreateCommand": "sh -lc 'dotnet workload restore'",
+    "postCreateCommand": {
+        "cmd1": "sh -lc 'dotnet workload restore'",
+        "cmd2": "mkdir -p /opt/android/home",
+        // x86_64 - flaky, might not run
+        "cmd3": "sdkmanager --update && sdkmanager 'system-images;android-36;google_apis;x86_64' && avdmanager create avd --name fab-avd --package 'system-images;android-36;google_apis;x86_64' --device pixel_9 --force"
+        // arm64 - should run without accel, but needs arm64 host
+        // "cmd4": "sdkmanager --update && sdkmanager 'system-images;android-36;default;arm64-v8a'  && avdmanager create avd --name fab-avd --package 'system-images;android-36;default;arm64-v8a'  --device pixel_9 --force"
+        // run with: emulator -avd fab-avd -no-snapshot -wipe-data -no-audio -no-window -no-accel -port 5555
+    },
+    "postStartCommand": "adb connect localhost:5555",
     "customizations": {
         "vscode": {
             "extensions": [

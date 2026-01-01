@@ -1,6 +1,10 @@
 {
     "name": "Fabulous F# for Dev",
     "image": "mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64",
+    //"image": "mcr.microsoft.com/dotnet/sdk:8.0.416-alpine3.23-amd64",
+    "workspaceMount": "type=bind,source=${localWorkspaceFolder}/BookHoundApp,target=/workspaces/BookHoundApp,consistency=cached",
+    "workspaceFolder": "/workspaces/BookHoundApp",
+    "postCreateCommand": "sh -lc 'dotnet workload restore'",
     "customizations": {
         "vscode": {
             "extensions": [

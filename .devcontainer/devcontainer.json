@@ -1,0 +1,12 @@
+{
+    "name": "Fabulous F# for Dev",
+    "image": "mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ionide.ionide-fsharp",
+                "ms-vscode-remote.remote-containers"
+            ]
+        }
+    }
+}

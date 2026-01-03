@@ -1,12 +1,16 @@
 services:
   bookhound:
-    image: mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64
+    image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
+    # image: mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64
     container_name: bookhound-dotnet-build
     volumes:
       - .:/workspaces/bookhound
       - apkshare:/apkshare
-    working_dir: /workspaces/bookhound/BookHoundApp
-    command: sleep infinity
+      
+    working_dir: /workspaces/bookhound
+    command:
+      - dash
+      - ./install-sdks.sh
 
   emulator:
     image: budtmo/docker-android:emulator_14.0
@@ -27,3 +31,4 @@ services:
 
 volumes:
   apkshare:
+  # sdks:

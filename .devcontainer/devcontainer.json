@@ -2,7 +2,7 @@
     "name": "Fabulous F# for Dev",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "bookhound",
-    "workspaceFolder": "/workspaces/BookHound",
+    "workspaceFolder": "/workspaces",
     "runServices": [
         "bookhound",
         "emulator"

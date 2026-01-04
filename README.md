@@ -28,19 +28,7 @@ yes | sdkmanager --licenses
 apt-get update
 apt-get install --only-upgrade openjdk-17-jdk
 
-c3:
-/opt/android-sdk-linux # env | sort
-ANDROID_HOME=/opt/android-sdk-linux
-ANDROID_SDK=/opt/android-sdk-linux
-ANDROID_SDK_HOME=/opt/android-sdk-linux
-ANDROID_SDK_ROOT=/opt/android-sdk-linux
-HOME=/root
-HOSTNAME=da30bbc99804
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/android-sdk-linux/platform-tools:/opt/android-sdk-linux/cmdline-tools/latest/bin/:/opt/android-sdk-linux/build-tools/34.0.0/:/opt/android-sdk-linux/emulator/:/opt/android-sdk-linux/bin:/opt/tools
-PWD=/opt/android-sdk-linux
-SHLVL=1
-TERM=xterm
+
 
 
 
@@ -63,6 +51,17 @@ inside the emulator (if all deps are fully updated - dockerfile has handled that
 dotnet workload restore BookHoundApp/BookHoundApp.sln
 dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
 
+dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln
+
+
+aapt:
+$ANDROID_SDK_ROOT/build-tools/36.0.0
+
+
+on emulator machine:
+adb install -r /apkshare/build/com.cheekbytes.bookhound-Signed.apk
+adb install -r /apkshare/build/com.companyname.BookHoundApp-Signed.apk
+adb install -r /apkshare/build2/com.companyname.BookHoundApp-Signed.apk
 
 dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID_SDK\_ROOT -p:JavaSdkDirectory=$JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
 

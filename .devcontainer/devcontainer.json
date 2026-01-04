@@ -8,7 +8,6 @@
         "emulator"
     ],
     "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
-    "postStartCommand": "sleep 4",
     "customizations": {
         "vscode": {
             "tasks": {

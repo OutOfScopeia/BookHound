@@ -100,4 +100,9 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
   </ItemGroup>
 
+  <!-- Added to make .NET Meteor work? -->
+  <ItemGroup>
+    <Compile Remove="**\*.cs" />
+  </ItemGroup>
+
 </Project>

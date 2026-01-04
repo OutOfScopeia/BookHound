@@ -105,3 +105,25 @@ adb connect host.docker.internal:35759
 
 
 
+Run: docker compose --project-name bookhound -f z:\bookhound\docker-compose.yml -f c:\Users\yuman\AppData\Roaming\Code\User\globalStorage\ms-vscode-remote.remote-containers\data\docker-compose\docker-compose.devcontainer.build-1767496486782.yml build bookhound emulator
+
+
+WTF?
+
+Running the postStartCommand from devcontainer.json...
+
+[49715 ms] Start: Run in container: /bin/sh -c sleep 4
+OCI runtime exec failed: exec failed: unable to start container process: chdir to cwd ("/workspaces/BookHound") set in config.json failed: no such file or directory
+[49774 ms] postStartCommand from devcontainer.json failed with exit code 127. Skipping any further user-provided commands.
+Done. Press any key to close the terminal.
+
+
+
+Delete VS Code server caches inside the container (if it still starts)
+Inside the container:
+rm -rf ~/.vscode-server*
+rm -rf ~/.vscode-remote
+
+
+
+

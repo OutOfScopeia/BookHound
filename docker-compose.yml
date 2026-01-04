@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.bookhound
     image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
     container_name: bookhound-dotnet-build
+    hostname: bh-app
     # best for adb debugging inside the container
     network_mode: host
 
@@ -19,6 +20,7 @@ services:
   emulator:
     image: budtmo/docker-android:emulator_14.0
     container_name: android-emulator
+    hostname: bh-emu
     privileged: true
     environment:
       - DEVICE=Samsung Galaxy S10

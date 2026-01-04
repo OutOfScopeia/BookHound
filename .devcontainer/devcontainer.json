@@ -7,11 +7,17 @@
         "bookhound",
         "emulator"
     ],
+    "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
+    "postStartCommand": "sleep 4",
     "customizations": {
         "vscode": {
+            "tasks": {
+                "dotnet-workload-restore": "DevContainer: dotnet workload restore"
+            },
             "extensions": [
                 "Ionide.Ionide-fsharp",
-                "ms-vscode-remote.remote-containers"
+                "ms-vscode-remote.remote-containers",
+                "nromanov.dotnet-meteor"
             ]
         }
     }

@@ -10,20 +10,63 @@ On Windows, create a new Fabulous app. Then edit the .fsproj to update any net8.
 
 Run DOTNET WORKLOAD RESTORE
 
-set envs for ANDROID\_SDK\_ROOT and JAVA\_HOME to whatever convenient local folders
+set envs for ANDROID_SDK\ROOT and JAVA_HOME to whatever convenient local folders
 
 Run this build command, which will also Fetch any missing Android dependencies (might need to run it twice if the command is fetching the deps to empty folders):
 
 dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$env:ANDROID\_SDK\_ROOT -p:JavaSdkDirectory=$env:JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
 
+dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/apkshare/sdk -p:JavaSdkDirectory=/apkshare/jdk -p:AcceptAndroidSdkLicenses=True -t:Run BookHoundApp
 
 
-inside the emulator:
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID\_SDK\_ROOT -p:JavaSdkDirectory=$JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
+
+--- FIGURE OUT HOW TO SHARE ANDROID SDK FOLDERS FROM CONTAINER3 FOR USE BY CONTAINER1
+
+/apkshare/sdk/cmdline-tools/latest/bin/sdkmanager --update
+yes | sdkmanager --licenses
+
+apt-get update
+apt-get install --only-upgrade openjdk-17-jdk
+
+c3:
+/opt/android-sdk-linux # env | sort
+ANDROID_HOME=/opt/android-sdk-linux
+ANDROID_SDK=/opt/android-sdk-linux
+ANDROID_SDK_HOME=/opt/android-sdk-linux
+ANDROID_SDK_ROOT=/opt/android-sdk-linux
+HOME=/root
+HOSTNAME=da30bbc99804
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/android-sdk-linux/platform-tools:/opt/android-sdk-linux/cmdline-tools/latest/bin/:/opt/android-sdk-linux/build-tools/34.0.0/:/opt/android-sdk-linux/emulator/:/opt/android-sdk-linux/bin:/opt/tools
+PWD=/opt/android-sdk-linux
+SHLVL=1
+TERM=xterm
+
+
+
+
+
+one-off tasks:
+DOTNET WORKLOAD RESTORE
+
+mkdir /apkshare/sdk
+
+mkdir /apkshare/jdk
+
+-cannot be root
+
+dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/apkshare/sdk -p:JavaSdkDirectory=/apkshare/jdk -p:AcceptAndroi
+dSdkLicenses=True -t:Run BookHoundApp
+
+inside the emulator (if all deps are fully updated - dockerfile has handled that)
+
+dotnet workload restore BookHoundApp/BookHoundApp.sln
+dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
+
+
+dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID_SDK\_ROOT -p:JavaSdkDirectory=$JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
 
 dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/opt/android -p:JavaSdkDirectory=/usr/lib/jvm/java-17-openjdk-amd64 -p:AcceptAndroidSdkLicenses=True -t:Run
-
-
 
 sdkmanager --update
 sdkmanager "system-images;android-36;google\_apis;x86\_64"
@@ -36,133 +79,25 @@ emulator -avd fab-avd -no-snapshot -wipe-data -no-audio -no-window -no-accel -po
 
 
 
+WIRELESS DEBUGGING
 
+pair over cable first
+go to android menu / debugging to enable wireless debugging
+note the ip/port/pairing code
+then disconnect cable and reconnect over wifi:
 
+adb connect 192.168.1.114:41033
 
+"adb devices" should show:
+192.168.1.114:35759     device
+on top of something like
+adb-RFCY11JWE3J-rwhGze._adb-tls-connect._tcp    device
 
+to keep the screen on while debugging (otherwise it disconnects and comes up wiht a random new port next time, requiring manual reconnect)
+adb -s 192.168.1.114:35759 shell svc power stayon true
 
-
-
-
-
-
-
-
-PS C:\\sandbox\\android-sdk\\platform-tools> $info = docker inspect vs-container | ConvertFrom-Json
-
-PS C:\\sandbox\\android-sdk\\platform-tools> $info\[0].HostConfig.NetworkMode
-
-bridge
-
-PS C:\\sandbox\\android-sdk\\platform-tools> $info\[0].HostConfig.PortBindings
-
-
-
-5555/tcp                    6080/tcp
-
---------                    --------
-
-{@{HostIp=; HostPort=5557}} {@{HostIp=; HostPort=6082}}
-
-
-
-PS C:\\sandbox\\android-sdk\\platform-tools> $info\[0].NetworkSettings.Ports
-
-
-
-5555/tcp                                                        6080/tcp
-
---------                                                        --------
-
-{@{HostIp=0.0.0.0; HostPort=5557}, @{HostIp=::; HostPort=5557}} {@{HostIp=0.0.0.0; HostPort=6082}, @{HostIp=::; HostPort=6082}}
-
-
-
-
-
-
-
-PS C:\\sandbox> $info = docker inspect android-container | ConvertFrom-Json
-
-PS C:\\sandbox> $info\[0].HostConfig.NetworkMode
-
-bridge
-
-PS C:\\sandbox> $info\[0].HostConfig.PortBindings
-
-
-
-5555/tcp                    6080/tcp
-
---------                    --------
-
-{@{HostIp=; HostPort=5556}} {@{HostIp=; HostPort=6081}}
-
-
-
-PS C:\\sandbox> $info\[0].NetworkSettings.Ports
-
-
-
-5555/tcp                                                        6080/tcp
-
---------                                                        --------
-
-{@{HostIp=0.0.0.0; HostPort=5556}, @{HostIp=::; HostPort=5556}} {@{HostIp=0.0.0.0; HostPort=6081}, @{HostIp=::; HostPort=6081}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$a = docker inspect vs-container | ConvertFrom-Json
-
-$b = docker inspect android-container | ConvertFrom-Json
-
-
-
-\# Compare NetworkMode and PortBindings
-
-\[PSCustomObject]@{
-
-&nbsp; Field = 'NetworkMode'
-
-&nbsp; VSCode = $a\[0].HostConfig.NetworkMode
-
-&nbsp; DockerRun = $b\[0].HostConfig.NetworkMode
-
-}
-
-\[PSCustomObject]@{
-
-&nbsp; Field = 'PortBindings'
-
-&nbsp; VSCode = ($a\[0].HostConfig.PortBindings | ForEach-Object { "$($\_.Key)->$($\_.Value\[0].HostPort)" }) -join '; '
-
-&nbsp; DockerRun = ($b\[0].HostConfig.PortBindings | ForEach-Object { "$($\_.Key)->$($\_.Value\[0].HostPort)" }) -join '; '
-
-}
-
-
-
-
-
-
+inside container:
+adb connect host.docker.internal:35759
 
 
 

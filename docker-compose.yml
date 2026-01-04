@@ -1,16 +1,20 @@
 services:
   bookhound:
+    build:
+      context: .
+      dockerfile: Dockerfile.bookhound
     image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
-    # image: mcr.microsoft.com/dotnet/sdk:10.0.101-alpine3.23-amd64
     container_name: bookhound-dotnet-build
+    # best for adb debugging inside the container
+    network_mode: host
+
     volumes:
       - .:/workspaces/bookhound
       - apkshare:/apkshare
       
     working_dir: /workspaces/bookhound
     command:
-      - dash
-      - ./install-sdks.sh
+      sleep infinity
 
   emulator:
     image: budtmo/docker-android:emulator_14.0
@@ -31,4 +35,3 @@ services:
 
 volumes:
   apkshare:
-  # sdks:

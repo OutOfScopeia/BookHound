@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DevContainer: dotnet workload restore",
+      "type": "shell",
+      "command": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
+      "options": {
+        "cwd": "${containerWorkspaceFolder}"
+      }
+    }
+  ]
+}

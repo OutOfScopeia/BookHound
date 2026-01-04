@@ -6,16 +6,26 @@ ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
 # Install dependencies for Android SDK
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk unzip curl && \
-    apt-get clean
+apt-get install -y openjdk-17-jdk unzip curl locales
+
+# VNC
+ENV USER=root
+ENV HOME=/root
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+RUN apt-get install -y xfce4 xfce4-goodies locales tightvncserver
+RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
+
+RUN apt-get clean
+
 # Download cmdline-tools
 RUN curl -L -o /tmp/cmdline-tools.zip \
-  https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
 RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
 RUN unzip /tmp/cmdline-tools.zip -d /tmp
 RUN mkdir -p /opt/android-sdk/cmdline-tools/latest \
-    && cp -a /tmp/cmdline-tools/. /opt/android-sdk/cmdline-tools/latest/ \
-    && rm -rf /tmp/cmdline-tools
+&& cp -a /tmp/cmdline-tools/. /opt/android-sdk/cmdline-tools/latest/ \
+&& rm -rf /tmp/cmdline-tools
 
 RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools"
 RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-36"

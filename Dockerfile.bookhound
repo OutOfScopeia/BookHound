@@ -5,8 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
 # Install dependencies for Android SDK
-RUN apt-get update && \
-apt-get install -y openjdk-17-jdk unzip curl locales
+RUN apt-get update && apt-get install -y openjdk-17-jdk unzip curl
 
 # VNC
 ENV USER=root
@@ -19,8 +18,7 @@ RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
 RUN apt-get clean
 
 # Download cmdline-tools
-RUN curl -L -o /tmp/cmdline-tools.zip \
-https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+RUN curl -L -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
 RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
 RUN unzip /tmp/cmdline-tools.zip -d /tmp
 RUN mkdir -p /opt/android-sdk/cmdline-tools/latest \

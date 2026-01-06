@@ -7,7 +7,7 @@ services:
     container_name: bookhound-dotnet-build
     hostname: bh-app
     # best for adb debugging inside the container
-    network_mode: host
+    # network_mode: host
 
     volumes:
       - .:/workspaces

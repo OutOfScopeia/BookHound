@@ -125,4 +125,37 @@ rm -rf ~/.vscode-remote
 
 
 
+vnc+novnc:
 
+
+sudo apt update
+sudo apt install xfce4 xfce4-goodies -y
+
+# set xfce as default session
+echo "xfce4-session" > ~/.xsession
+
+# do i need this?
+sudo apt install tigervnc-standalone-server -y
+
+# start to generate cfg
+vncserver
+
+# use nano to replace startup cfg with
+nano ~/.vnc/xstartup
+
+#!/bin/sh
+xrdb $HOME/.Xresources
+startxfce4 &
+
+# make it executable
+chmod +x ~/.vnc/xstartup
+
+# install noVNC
+sudo apt update
+sudo apt install novnc websockify
+
+# point proxy to vnc server (starts a web server on port 6080)
+./utils/novnc_proxy --vnc localhost:5901
+
+# access from web
+http://<server-ip>:6080/vnc.html

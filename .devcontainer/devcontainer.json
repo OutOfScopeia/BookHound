@@ -4,7 +4,7 @@
     "service": "bookhound",
     "workspaceFolder": "/workspaces",
     "runServices": [
-        "bookhound",
+        "bookhound"
         // "emulator"
     ],
     // "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",

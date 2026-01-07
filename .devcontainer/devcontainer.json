@@ -7,7 +7,7 @@
         "bookhound",
         // "emulator"
     ],
-    "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
+    // "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
     "customizations": {
         "vscode": {
             "tasks": {

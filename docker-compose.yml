@@ -6,6 +6,11 @@ services:
     image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
     container_name: bookhound-dotnet-build
     hostname: bh-app
+    ports:
+      - "5554:5554"   # Emulator console
+      - "5555:5555"   # ADB
+      - "6080:6080"   # VNC
+
     # best for adb debugging inside the container
     # network_mode: host
 

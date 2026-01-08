@@ -3,6 +3,7 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "bookhound",
     "workspaceFolder": "/workspaces",
+    //"overrideCommand": false,
     "runServices": [
         "bookhound"
         // "emulator"

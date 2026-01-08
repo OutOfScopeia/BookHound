@@ -4,48 +4,37 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Android SDK root
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
-
+# Install dependencies for Android SDK
+RUN apt-get update && apt-get install -y openjdk-17-jdk unzip curl
+# Download cmdline-tools
+RUN curl -L -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+RUN unzip /tmp/cmdline-tools.zip -d /tmp
+RUN mkdir -p /opt/android-sdk/cmdline-tools/latest \
+&& cp -a /tmp/cmdline-tools/. /opt/android-sdk/cmdline-tools/latest/ \
+&& rm -rf /tmp/cmdline-tools
+RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools"
+RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-36"
+RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "build-tools;36.0.0"
 # VNC
 ENV USER=root
 ENV HOME=/root
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
-RUN apt-get install -y locales xfce4 xfce4-goodies tightvncserver novnc websockify
+RUN apt-get update && apt-get install -y locales xfce4 xfce4-goodies dbus-x11 tightvncserver novnc websockify 
 RUN apt-get clean
 RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
 # set xfce as default session
 RUN echo "xfce4-session" > ~/.xsession
-
-# start to generate cfg
 # RUN vncserver
 # Create VNC password non-interactively
 RUN mkdir -p /root/.vnc && \
 echo "password1!" | vncpasswd -f > /root/.vnc/passwd && \
 chmod 600 /root/.vnc/passwd
-
-
-# use nano to replace startup cfg with
-RUN mkdir -p /root/.vnc && \
-echo '#!/bin/sh' > /root/.vnc/xstartup && \
-echo 'xrdb $HOME/.Xresources' >> /root/.vnc/xstartup && \
-echo 'startxfce4 &' >> /root/.vnc/xstartup && \
-chmod +x /root/.vnc/xstartup
-
-# make it executable
-RUN chmod +x ~/.vnc/xstartup
-
-# point proxy to vnc server (starts a web server on port 6080)
-# RUN ./utils/novnc_proxy --vnc localhost:5901
-
-# # Install dependencies for Android SDK
-# RUN apt-get update && apt-get install -y openjdk-17-jdk unzip curl
-# # Download cmdline-tools
-# RUN curl -L -o /tmp/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
-# RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
-# RUN unzip /tmp/cmdline-tools.zip -d /tmp
-# RUN mkdir -p /opt/android-sdk/cmdline-tools/latest \
-# && cp -a /tmp/cmdline-tools/. /opt/android-sdk/cmdline-tools/latest/ \
-# && rm -rf /tmp/cmdline-tools
-# RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools"
-# RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-36"
-# RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "build-tools;36.0.0"
+# VNC xstartup cfg
+COPY xstartup /usr/local/bin/xstartup
+RUN chmod +x /root/.vnc/xstartup
+# container startup script
+COPY runVNC.sh /usr/local/bin/runVNC.sh
+RUN chmod +x /usr/local/bin/runVNC.sh
+CMD ["sh", "-c", "/usr/local/bin/runVNC.sh"]

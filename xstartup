@@ -1,0 +1,8 @@
+#!/bin/bash
+xrdb $HOME/.Xresources
+eval $(dbus-launch --sh-syntax)
+export DBUS_SESSION_BUS_ADDRESS
+export DBUS_SESSION_BUS_PID
+startxfce4 &
+xfwm4 --replace &
+xfsettingsd &

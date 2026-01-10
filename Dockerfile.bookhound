@@ -21,7 +21,9 @@ ENV USER=root
 ENV HOME=/root
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
-RUN apt-get update && apt-get install -y locales xfce4 xfce4-goodies dbus-x11 tightvncserver novnc websockify 
+RUN apt-get update && apt-get install -y locales xfce4 xfce4-goodies dbus-x11 x11-apps xterm tigervnc-standalone-server novnc websockify 
+# "debug" only
+RUN apt-get install nano -y
 RUN apt-get clean
 RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
 # set xfce as default session

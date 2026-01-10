@@ -22,23 +22,5 @@ services:
     command:
       /usr/local/bin/runVNC.sh
 
-  # emulator:
-  #   image: budtmo/docker-android:emulator_14.0
-  #   container_name: android-emulator
-  #   hostname: bh-emu
-  #   privileged: true
-  #   environment:
-  #     - DEVICE=Samsung Galaxy S10
-  #     - WEB_VNC=true
-  #   devices:
-  #     - /dev/kvm
-  #   volumes:
-  #     - apkshare:/apkshare
-  #   ports:
-  #     - "5554:5554"   # Emulator console
-  #     - "5555:5555"   # ADB
-  #     - "6080:6080"   # VNC
-  #   command: /bin/bash -c "start-emulator"
-
 volumes:
   apkshare:

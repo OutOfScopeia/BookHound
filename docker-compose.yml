@@ -20,7 +20,7 @@ services:
       
     working_dir: /workspaces
     command:
-      sleep infinity
+      /usr/local/bin/runVNC.sh
 
   # emulator:
   #   image: budtmo/docker-android:emulator_14.0

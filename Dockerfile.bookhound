@@ -29,10 +29,10 @@ RUN echo "xfce4-session" > ~/.xsession
 # RUN vncserver
 # Create VNC password non-interactively
 RUN mkdir -p /root/.vnc && \
-echo "password1!" | vncpasswd -f > /root/.vnc/passwd && \
+echo "dummy" | vncpasswd -f > /root/.vnc/passwd && \
 chmod 600 /root/.vnc/passwd
 # VNC xstartup cfg
-COPY xstartup /usr/local/bin/xstartup
+COPY xstartup /root/.vnc/xstartup
 RUN chmod +x /root/.vnc/xstartup
 # container startup script
 COPY runVNC.sh /usr/local/bin/runVNC.sh

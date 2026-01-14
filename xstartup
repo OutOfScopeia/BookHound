@@ -11,4 +11,6 @@ export DBUS_SESSION_BUS_ADDRESS
 export DBUS_SESSION_BUS_PID
 # Start XFCE
 startxfce4 2>&1 | tee /tmp/xfce.log &
+# Start emulator
+/usr/local/bin/start-emulator.sh &
 wait

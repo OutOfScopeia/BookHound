@@ -2,10 +2,6 @@ BookHound
 
 Mobile app that uses OCR to scan a book shelf for a desired book title.
 
-
-
-Your containerising is no good here.
-
 On Windows, create a new Fabulous app. Then edit the .fsproj to update any net8.0 to net10.0 and yeet any target framework references to Tim Apple (net?.0-ios, net?.0-maccatalyst).
 
 Run DOTNET WORKLOAD RESTORE
@@ -100,62 +96,7 @@ adb connect host.docker.internal:35759
 
 
 
-
-
-
-
-Run: docker compose --project-name bookhound -f z:\bookhound\docker-compose.yml -f c:\Users\yuman\AppData\Roaming\Code\User\globalStorage\ms-vscode-remote.remote-containers\data\docker-compose\docker-compose.devcontainer.build-1767496486782.yml build bookhound emulator
-
-
-WTF?
-
-Running the postStartCommand from devcontainer.json...
-
-[49715 ms] Start: Run in container: /bin/sh -c sleep 4
-OCI runtime exec failed: exec failed: unable to start container process: chdir to cwd ("/workspaces/BookHound") set in config.json failed: no such file or directory
-[49774 ms] postStartCommand from devcontainer.json failed with exit code 127. Skipping any further user-provided commands.
-Done. Press any key to close the terminal.
-
-
-
 Delete VS Code server caches inside the container (if it still starts)
 Inside the container:
 rm -rf ~/.vscode-server*
 rm -rf ~/.vscode-remote
-
-
-
-vnc+novnc:
-
-
-sudo apt update
-sudo apt install xfce4 xfce4-goodies -y
-
-# set xfce as default session
-echo "xfce4-session" > ~/.xsession
-
-# do i need this?
-sudo apt install tigervnc-standalone-server -y
-
-# start to generate cfg
-vncserver
-
-# use nano to replace startup cfg with
-nano ~/.vnc/xstartup
-
-#!/bin/sh
-xrdb $HOME/.Xresources
-startxfce4 &
-
-# make it executable
-chmod +x ~/.vnc/xstartup
-
-# install noVNC
-sudo apt update
-sudo apt install novnc websockify
-
-# point proxy to vnc server (starts a web server on port 6080)
-./utils/novnc_proxy --vnc localhost:5901
-
-# access from web
-http://<server-ip>:6080/vnc.html

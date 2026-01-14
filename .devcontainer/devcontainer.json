@@ -6,7 +6,6 @@
     //"overrideCommand": false,
     "runServices": [
         "bookhound"
-        // "emulator"
     ],
     // "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
     "customizations": {

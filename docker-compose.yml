@@ -2,9 +2,11 @@ services:
   bookhound:
     build:
       context: .
-      dockerfile: Dockerfile.bookhound
+      dockerfile: Dockerfile
     image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
     container_name: bookhound-dotnet-build
+    devices:
+      - "/dev/kvm:/dev/kvm"
     hostname: bh-app
     ports:
       - "5554:5554"   # Emulator console

@@ -1,5 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <!-- Fixes crashes in android emulator. Remove the whole group if ever no longer needed (AndroidUseFastDeployment is deprecated already).  -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-android'">
+    <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
+    <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFrameworks>net10.0-android</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
@@ -13,10 +21,10 @@
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
 
     <!-- Display name -->
-    <ApplicationTitle>BookHoundApp</ApplicationTitle>
+    <ApplicationTitle>BookHound</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.BookHoundApp</ApplicationId>
+    <ApplicationId>com.cheekbytes.bookhound</ApplicationId>
     <ApplicationIdGuid>99FA52AF-7483-4E48-8A16-ED42DE49641C</ApplicationIdGuid>
 
     <!-- Versions -->

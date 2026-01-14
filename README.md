@@ -2,10 +2,6 @@ BookHound
 
 Mobile app that uses OCR to scan a book shelf for a desired book title.
 
-
-
-Your containerising is no good here.
-
 On Windows, create a new Fabulous app. Then edit the .fsproj to update any net8.0 to net10.0 and yeet any target framework references to Tim Apple (net?.0-ios, net?.0-maccatalyst).
 
 Run DOTNET WORKLOAD RESTORE
@@ -28,19 +24,7 @@ yes | sdkmanager --licenses
 apt-get update
 apt-get install --only-upgrade openjdk-17-jdk
 
-c3:
-/opt/android-sdk-linux # env | sort
-ANDROID_HOME=/opt/android-sdk-linux
-ANDROID_SDK=/opt/android-sdk-linux
-ANDROID_SDK_HOME=/opt/android-sdk-linux
-ANDROID_SDK_ROOT=/opt/android-sdk-linux
-HOME=/root
-HOSTNAME=da30bbc99804
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/android-sdk-linux/platform-tools:/opt/android-sdk-linux/cmdline-tools/latest/bin/:/opt/android-sdk-linux/build-tools/34.0.0/:/opt/android-sdk-linux/emulator/:/opt/android-sdk-linux/bin:/opt/tools
-PWD=/opt/android-sdk-linux
-SHLVL=1
-TERM=xterm
+
 
 
 
@@ -63,6 +47,17 @@ inside the emulator (if all deps are fully updated - dockerfile has handled that
 dotnet workload restore BookHoundApp/BookHoundApp.sln
 dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
 
+dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln
+
+
+aapt:
+$ANDROID_SDK_ROOT/build-tools/36.0.0
+
+
+on emulator machine:
+adb install -r /apkshare/build/com.cheekbytes.bookhound-Signed.apk
+adb install -r /apkshare/build/com.companyname.BookHoundApp-Signed.apk
+adb install -r /apkshare/build2/com.companyname.BookHoundApp-Signed.apk
 
 dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID_SDK\_ROOT -p:JavaSdkDirectory=$JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
 
@@ -101,29 +96,7 @@ adb connect host.docker.internal:35759
 
 
 
-
-
-
-
-Run: docker compose --project-name bookhound -f z:\bookhound\docker-compose.yml -f c:\Users\yuman\AppData\Roaming\Code\User\globalStorage\ms-vscode-remote.remote-containers\data\docker-compose\docker-compose.devcontainer.build-1767496486782.yml build bookhound emulator
-
-
-WTF?
-
-Running the postStartCommand from devcontainer.json...
-
-[49715 ms] Start: Run in container: /bin/sh -c sleep 4
-OCI runtime exec failed: exec failed: unable to start container process: chdir to cwd ("/workspaces/BookHound") set in config.json failed: no such file or directory
-[49774 ms] postStartCommand from devcontainer.json failed with exit code 127. Skipping any further user-provided commands.
-Done. Press any key to close the terminal.
-
-
-
 Delete VS Code server caches inside the container (if it still starts)
 Inside the container:
 rm -rf ~/.vscode-server*
 rm -rf ~/.vscode-remote
-
-
-
-

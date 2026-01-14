@@ -2,3 +2,4 @@
 \obj
 .vscode
 .fake
+msbuild.binlog

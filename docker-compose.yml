@@ -2,36 +2,27 @@ services:
   bookhound:
     build:
       context: .
-      dockerfile: Dockerfile.bookhound
+      dockerfile: Dockerfile
     image: mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
     container_name: bookhound-dotnet-build
-    # best for adb debugging inside the container
-    network_mode: host
-
-    volumes:
-      - .:/workspaces/bookhound
-      - apkshare:/apkshare
-      
-    working_dir: /workspaces/bookhound
-    command:
-      sleep infinity
-
-  emulator:
-    image: budtmo/docker-android:emulator_14.0
-    container_name: android-emulator
-    privileged: true
-    environment:
-      - DEVICE=Samsung Galaxy S10
-      - WEB_VNC=true
     devices:
-      - /dev/kvm
-    volumes:
-      - apkshare:/apkshare
+      - "/dev/kvm:/dev/kvm"
+    hostname: bh-app
     ports:
       - "5554:5554"   # Emulator console
       - "5555:5555"   # ADB
       - "6080:6080"   # VNC
-    command: /bin/bash -c "start-emulator"
+
+    # best for adb debugging inside the container
+    # network_mode: host
+
+    volumes:
+      - .:/workspaces
+      - apkshare:/apkshare
+      
+    working_dir: /workspaces
+    command:
+      /usr/local/bin/runVNC.sh
 
 volumes:
   apkshare:

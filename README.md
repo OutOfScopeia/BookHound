@@ -15,7 +15,6 @@ dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirec
 dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/apkshare/sdk -p:JavaSdkDirectory=/apkshare/jdk -p:AcceptAndroidSdkLicenses=True -t:Run BookHoundApp
 
 
-
 --- FIGURE OUT HOW TO SHARE ANDROID SDK FOLDERS FROM CONTAINER3 FOR USE BY CONTAINER1
 
 /apkshare/sdk/cmdline-tools/latest/bin/sdkmanager --update
@@ -49,6 +48,8 @@ dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
 
 dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln
 
+android builds ignore 'OutputPath' arg
+dotnet build -f net10.0-android BookHoundApp/BookHoundApp.sln
 
 aapt:
 $ANDROID_SDK_ROOT/build-tools/36.0.0

@@ -1,103 +1,81 @@
-BookHound
+# BookHound
+### Mobile app that uses OCR to scan a book shelf for a desired book title.
+## DevContainerised Environment
+This is hybrid container image:
+* Dotnet SDK 10 noble (base image)
+* Android SDK tools + Android Emulator
+* TigerVNC + NoVNC
 
-Mobile app that uses OCR to scan a book shelf for a desired book title.
+TigerVNC for easy passwordless access. It is bound to localhost only, as the remote acccess over web is actually handled/proxied by NoVNC.
+You can use this as a template if you want to use this dev setup with your own project. Just rip out the BookHound project (the whole BookHoundApp folder) and replace with your own. Obviously, fix all the references and names/labels in the files outside the folder (devcontainer.json, docker-compose.yml, etc).
 
-On Windows, create a new Fabulous app. Then edit the .fsproj to update any net8.0 to net10.0 and yeet any target framework references to Tim Apple (net?.0-ios, net?.0-maccatalyst).
-
-Run DOTNET WORKLOAD RESTORE
-
-set envs for ANDROID_SDK\ROOT and JAVA_HOME to whatever convenient local folders
-
-Run this build command, which will also Fetch any missing Android dependencies (might need to run it twice if the command is fetching the deps to empty folders):
-
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$env:ANDROID\_SDK\_ROOT -p:JavaSdkDirectory=$env:JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
-
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/apkshare/sdk -p:JavaSdkDirectory=/apkshare/jdk -p:AcceptAndroidSdkLicenses=True -t:Run BookHoundApp
-
-
---- FIGURE OUT HOW TO SHARE ANDROID SDK FOLDERS FROM CONTAINER3 FOR USE BY CONTAINER1
-
-/apkshare/sdk/cmdline-tools/latest/bin/sdkmanager --update
-yes | sdkmanager --licenses
-
-apt-get update
-apt-get install --only-upgrade openjdk-17-jdk
-
-
-
-
-
-
-
-one-off tasks:
-DOTNET WORKLOAD RESTORE
-
-mkdir /apkshare/sdk
-
-mkdir /apkshare/jdk
-
--cannot be root
-
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/apkshare/sdk -p:JavaSdkDirectory=/apkshare/jdk -p:AcceptAndroi
-dSdkLicenses=True -t:Run BookHoundApp
-
-inside the emulator (if all deps are fully updated - dockerfile has handled that)
-
+1. Create a new [Fabulous F#](https://docs.fabulous.dev) app.
+2. Replace the BookHoundApp folder with the folder of your new Fabulous project.
+3. .fsproj: Update the app name and identifier.
+4. .fsproj: Update any TFMs from net8.0 to net10.0.
+5. .fsproj: Yeet any target framework references to Tim Apple (net?.0-ios, net?.0-maccatalyst).
+6. .fsproj: Add this section - my app kept crashing inside the x86_64 emulator without it:
+```XML
+    <!-- Fixes crashes in android emulator. Remove the whole group if ever no longer needed (AndroidUseFastDeployment is deprecated already).  -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-android'">
+    <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
+    <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+  </PropertyGroup>
+```
+6. .fsproj: Add this section if you want to use .NET Meteor VS extension for debugging:
+```XML
+  <!-- Added to make .NET Meteor work -->
+  <ItemGroup>
+    <Compile Remove="**\*.cs" />
+  </ItemGroup>
+```
+7. In VS Code, open the folder in container.
+8. There is a **PostCreate** command in the *devcontainer.json* that should do this (once, after the container is created). In case it didn't, from the in-container terminal, run:
+```bash
 dotnet workload restore BookHoundApp/BookHoundApp.sln
+```
+9. You should be able to build the app and deploy it to the emulator with:
+```bash
 dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
+```
+10. Open [localhost:6080/vnc.html](http://localhost:6080/vnc.html) to actually see what you're doing.
 
+## Some more disorganised and possibly irrelevant notes
+This won't work as the OutputPath is ignored for android builds. You can specify a folder, but that folder will be created inside the usual bin/Debug folder, never outside.
+```bash
 dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln
-
-android builds ignore 'OutputPath' arg
-dotnet build -f net10.0-android BookHoundApp/BookHoundApp.sln
-
-aapt:
-$ANDROID_SDK_ROOT/build-tools/36.0.0
-
+```
 
 on emulator machine:
 adb install -r /apkshare/build/com.cheekbytes.bookhound-Signed.apk
-adb install -r /apkshare/build/com.companyname.BookHoundApp-Signed.apk
-adb install -r /apkshare/build2/com.companyname.BookHoundApp-Signed.apk
 
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=$ANDROID_SDK\_ROOT -p:JavaSdkDirectory=$JAVA\_HOME -p:AcceptAndroidSdkLicenses=True -t:Run
+### Wireless Debugging
+1. Pair over cable first
+2. Go to android menu / debugging to enable wireless debugging
+3. Note the ip/port/pairing code
+4. Disconnect cable and reconnect over wifi:
 
-dotnet build -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory=/opt/android -p:JavaSdkDirectory=/usr/lib/jvm/java-17-openjdk-amd64 -p:AcceptAndroidSdkLicenses=True -t:Run
-
-sdkmanager --update
-sdkmanager "system-images;android-36;google\_apis;x86\_64"
-avdmanager create avd --name fab-avd --package "system-images;android-36;google\_apis;x86\_64" --device pixel\_9 --force
-emulator -avd fab-avd -no-snapshot -wipe-data -no-audio -no-window -no-accel -port 5554
-
-sdkmanager "system-images;android-36;default;arm64-v8a"
-avdmanager create avd --name fab-avd --package "system-images;android-36;default;arm64-v8a" --device pixel\_9 --force
-emulator -avd fab-avd -no-snapshot -wipe-data -no-audio -no-window -no-accel -port 5554
-
-
-
-WIRELESS DEBUGGING
-
-pair over cable first
-go to android menu / debugging to enable wireless debugging
-note the ip/port/pairing code
-then disconnect cable and reconnect over wifi:
-
+```bash
 adb connect 192.168.1.114:41033
-
+```
 "adb devices" should show:
 192.168.1.114:35759     device
 on top of something like
 adb-RFCY11JWE3J-rwhGze._adb-tls-connect._tcp    device
 
 to keep the screen on while debugging (otherwise it disconnects and comes up wiht a random new port next time, requiring manual reconnect)
+```bash
 adb -s 192.168.1.114:35759 shell svc power stayon true
-
-inside container:
+```
+inside the container:
+```bash
 adb connect host.docker.internal:35759
-
-
-
-Delete VS Code server caches inside the container (if it still starts)
+```
+### Delete VS Code server caches inside the container (the crap you sometimes can't get rid of even with "rebuild without cache")
 Inside the container:
-rm -rf ~/.vscode-server*
-rm -rf ~/.vscode-remote
+```bash
+rm -rf ~/.vscode-server*  
+rm -rf ~/.vscode-remote  
+```

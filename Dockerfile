@@ -17,7 +17,6 @@ RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools"
 RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-36"
 RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "build-tools;36.0.0"
 RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "system-images;android-36;google_apis;x86_64"
-# RUN avdmanager create avd -n test -k "system-images;android-36;google_apis;x86_64" --force --device "pixel_9_pro"
 # VNC
 ENV USER=root
 ENV HOME=/root

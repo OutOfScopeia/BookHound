@@ -1,0 +1,16 @@
+#!/bin/bash
+xrdb $HOME/.Xresources
+export XKL_XMODMAP_DISABLE=1
+# Required: disable systemd user session (not available in containers)
+export XFCE_DISABLE_USER_SERVICES=1
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+# Required: start DBus manually
+eval "$(dbus-launch --sh-syntax)"
+export DBUS_SESSION_BUS_ADDRESS
+export DBUS_SESSION_BUS_PID
+# Start XFCE
+startxfce4 2>&1 | tee /tmp/xfce.log &
+# Start emulator
+/usr/local/bin/start-emulator.sh &
+wait

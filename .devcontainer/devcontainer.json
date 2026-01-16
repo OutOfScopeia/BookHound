@@ -1,0 +1,23 @@
+{
+    "name": "Fabulous F# for Dev",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "bookhound",
+    "workspaceFolder": "/workspaces",
+    //"overrideCommand": false,
+    "runServices": [
+        "bookhound"
+    ],
+    "postCreateCommand": "dotnet workload restore BookHoundApp/BookHoundApp.sln",
+    "customizations": {
+        "vscode": {
+            "tasks": {
+                "dotnet-workload-restore": "DevContainer: dotnet workload restore"
+            },
+            "extensions": [
+                "Ionide.Ionide-fsharp",
+                "ms-vscode-remote.remote-containers",
+                "nromanov.dotnet-meteor"
+            ]
+        }
+    }
+}

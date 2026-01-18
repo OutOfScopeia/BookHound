@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0.101-noble-amd64
+FROM mcr.microsoft.com/dotnet/sdk:10.0.102-noble-amd64
 # Non-interactive apt
 ENV DEBIAN_FRONTEND=noninteractive
 # Android SDK root

@@ -43,6 +43,10 @@ dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
 10. Open [localhost:6080/vnc.html](http://localhost:6080/vnc.html) to actually see what you're doing.
 
 ## Some more disorganised and possibly irrelevant notes
+### WSL Version [Windows only]
+Updating WSL to 2.6.3 fucked the whole thing, as it breaks the /dev/kvm virtualisation passthrough from the host to the container. You can get the .msi for 2.4.13 from the official channels to unfuck it.
+
+### OutputPath arg for dotnet build
 This won't work as the OutputPath is ignored for android builds. You can specify a folder, but that folder will be created inside the usual bin/Debug folder, never outside.
 ```bash
 dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln

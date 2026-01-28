@@ -10,9 +10,15 @@ open Microsoft.Maui.Primitives
 open type Fabulous.Maui.View
 
 module App =
-    type Model = { Count: int }
+    type Model = {
+        Count: int
+        TrackedString: string option
+     }
 
-    type Msg = | Clicked
+    type Msg =
+        | TrackedStringEntered
+        | TrackedStringRecognised
+        | Clicked
 
     type CmdMsg = SemanticAnnounce of string
 
@@ -23,7 +29,7 @@ module App =
         match cmdMsg with
         | SemanticAnnounce text -> semanticAnnounce text
 
-    let init () = { Count = 0 }, []
+    let init () = { Count = 0; TrackedString = None }, []
 
     let update msg model =
         match msg with

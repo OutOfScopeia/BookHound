@@ -34,11 +34,11 @@ You can use this as a template if you want to use this dev setup with your own p
 7. In VS Code, open the folder in container.
 8. There is a **PostCreate** command in the *devcontainer.json* that should do this (once, after the container is created). In case it didn't, from the in-container terminal, run:
 ```bash
-dotnet workload restore BookHoundApp/BookHoundApp.sln
+dotnet workload restore BookHoundApp.sln
 ```
 9. You should be able to build the app and deploy it to the emulator with:
 ```bash
-dotnet build -f net10.0-android -t:Run BookHoundApp/BookHoundApp.sln
+dotnet build -f net10.0-android -t:Run BookHoundApp.sln
 ```
 10. Open [localhost:6080/vnc.html](http://localhost:6080/vnc.html) to actually see what you're doing.
 
@@ -49,7 +49,7 @@ Updating WSL to 2.6.3 fucked the whole thing, as it breaks the /dev/kvm virtuali
 ### OutputPath arg for dotnet build
 This won't work as the OutputPath is ignored for android builds. You can specify a folder, but that folder will be created inside the usual bin/Debug folder, never outside.
 ```bash
-dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp/BookHoundApp.sln
+dotnet build -f net10.0-android -p:OutputPath=/apkshare/build BookHoundApp.sln
 ```
 
 on emulator machine:

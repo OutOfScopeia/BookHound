@@ -17,7 +17,7 @@ services:
     # network_mode: host
 
     volumes:
-      - .:/workspaces
+      - ..:/workspaces
       - apkshare:/apkshare
       
     working_dir: /workspaces

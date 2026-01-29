@@ -1,15 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <!-- Fixes crashes in android emulator. Remove the whole group if ever no longer needed (AndroidUseFastDeployment is deprecated already).  -->
-  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-android'">
-    <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
-    <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
-    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AndroidProjectFolder>Platforms\Android\</AndroidProjectFolder>
+		<iOSProjectFolder>Platforms\iOS\</iOSProjectFolder>
+		<MacCatalystProjectFolder>Platforms\MacCatalyst\</MacCatalystProjectFolder>
+		<WindowsProjectFolder>Platforms\Windows\</WindowsProjectFolder>
+		<TizenProjectFolder>Platforms\Tizen\</TizenProjectFolder>
+	</PropertyGroup>
+	<!-- Fixes crashes in android emulator. Remove the whole group if ever no longer needed (AndroidUseFastDeployment is deprecated already).  -->
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
+	    <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
+	    <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
+	    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+	    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+	</PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0-android</TargetFrameworks>
+	<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
@@ -35,7 +41,7 @@
 
     <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'ios'">14.2</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'android'">34.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$(TargetPlatformIdentifier) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'tizen'">6.5</SupportedOSPlatformVersion>
@@ -44,24 +50,6 @@
   <ItemGroup>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-    <!-- Custom Fonts -->
-    <MauiFont Include="Resources\Fonts\*" />
-
-    <!-- Images -->
-    <MauiImage Include="Resources\Images\*" />
-    <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
-
-    <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-    <MauiAsset Include="Resources\Raw\*" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-
-    <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetPlatformIdentifier) == 'android'">
@@ -107,10 +95,4 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
   </ItemGroup>
-
-  <!-- Added to make .NET Meteor work? -->
-  <ItemGroup>
-    <Compile Remove="**\*.cs" />
-  </ItemGroup>
-
 </Project>

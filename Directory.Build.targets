@@ -1,0 +1,33 @@
+<Project>
+	<ItemGroup>
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\**\*.*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\*" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- Android resources -->
+		<AndroidResource Include="$(AndroidProjectFolder)Resources\**\*.*" />
+		<AndroidResource Remove="$(AndroidProjectFolder)Resources/raw/.*" />
+		<AndroidResource Update="$(AndroidProjectFolder)Resources/raw/*" />
+
+		<!-- Android assets -->
+		<AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*.*"
+					  Exclude="$(AndroidProjectFolder)Assets\**\.*/**" />
+	</ItemGroup>
+	
+	<!-- Added to make .NET Meteor work? -->
+	<ItemGroup>
+		<Compile Remove="**\*.cs" />
+	</ItemGroup>
+</Project>

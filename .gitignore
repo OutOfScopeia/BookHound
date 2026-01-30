@@ -3,3 +3,4 @@
 .vscode
 .fake
 msbuild.binlog
+/.vs

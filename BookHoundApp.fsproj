@@ -7,24 +7,17 @@
     <TizenProjectFolder>Platforms/Tizen/</TizenProjectFolder>
     <ProjectGuid>{dbe60a66-0c64-4103-ba7b-dd5633e04541}</ProjectGuid>
   </PropertyGroup>
-  <!-- Fixes crashes in android emulator. Remove the whole group if ever no longer needed (AndroidUseFastDeployment is deprecated already).  -->
-  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-android'">
+  <!-- Android emulator workaround -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
     <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
     <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup>
-    <!--1a-->
-    <!--<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-    <TargetFramework Condition="'$(TargetFramework)' == ''">$([System.Text.RegularExpressions.Regex]::Match('$(TargetFrameworks)','[^;]+').Value)</TargetFramework>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>-->
-    <!--1b-->
     <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0</TargetFrameworks>
-    <!-- Ensure VS always has a valid TFM during design-time build -->
+    <!-- Design-time default for VS -->
     <TargetFramework Condition="'$(TargetFramework)' == ''">net8.0-android</TargetFramework>
-    <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-    <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
     <OutputType>Exe</OutputType>
     <RootNamespace>BookHoundApp</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -39,29 +32,21 @@
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
-    <!--<TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == ''">$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))</TargetPlatformIdentifier>-->
-    <!--2a-->
-    <!--<TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == ''">$([MSBuild]::GetTargetPlatformIdentifier($([System.Text.RegularExpressions.Regex]::Match('$(TargetFrameworks)','[^;]+').Value)))</TargetPlatformIdentifier>-->
-    <!--2b-->
-    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == ''">android</TargetPlatformIdentifier>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'ios'">14.2</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'android'">34.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="$(TargetPlatformIdentifier) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-    <SupportedOSPlatformVersion Condition="$(TargetPlatformIdentifier) == 'tizen'">6.5</SupportedOSPlatformVersion>
+    <!-- OS platform versions per TFM -->
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">34.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net8.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
+    <!-- Tizen only really makes sense if you add a net8.0-tizen TFM; leave it inert for now -->
   </PropertyGroup>
-  <!--3a-->
-  <!--<ItemGroup Condition="$(TargetPlatformIdentifier) == 'android'">
-    <AndroidResource Include="$(AndroidProjectFolder)Resources/*/*" />
-    <AndroidResource Remove="$(AndroidProjectFolder)Resources/raw/.*" />
-    <AndroidResource Update="$(AndroidProjectFolder)Resources/raw/*" />
-    <AndroidAsset Include="$(AndroidProjectFolder)Assets/**/*" Exclude="$(AndroidProjectFolder)Assets/**/.*/**" />
-    <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
-    <Compile Include="$(AndroidProjectFolder)MainActivity.fs" />
-    <Compile Include="$(AndroidProjectFolder)MainApplication.fs" />
-  </ItemGroup>-->
-  <!--3b-->
+  <!-- Shared F# code -->
+  <!-- Android -->
+  <!-- iOS -->
+  <!-- MacCatalyst -->
+  <!-- Windows -->
+  <!-- Tizen (only meaningful if you later add net8.0-tizen to TargetFrameworks) -->
+  <!-- Packages -->
   <ItemGroup>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
@@ -88,5 +73,10 @@
     <PackageReference Include="FSharp.Core" Version="8.0.100" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="Directory.Build.targets" />
+    <None Include="global.json" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

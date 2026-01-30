@@ -1,10 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31611.283
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BookHoundApp", "BookHoundApp.fsproj", "{DBE60A66-0C64-4103-BA7B-DD5633E04541}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BookHoundApp", "BookHoundApp.fsproj", "{7FB46A32-A97B-47BA-951D-65733AD8A286}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{2B3019F4-9006-4694-932B-EFC9D5989729}"
+	ProjectSection(SolutionItems) = preProject
+		Build\android-emulator.desktop = Build\android-emulator.desktop
+		Build\docker-compose.yml = Build\docker-compose.yml
+		Build\Dockerfile = Build\Dockerfile
+		Build\install-android-deps-win.ps1 = Build\install-android-deps-win.ps1
+		Build\runVNC.sh = Build\runVNC.sh
+		Build\start-emulator.sh = Build\start-emulator.sh
+		Build\xstartup = Build\xstartup
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,12 +22,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FB46A32-A97B-47BA-951D-65733AD8A286}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE60A66-0C64-4103-BA7B-DD5633E04541}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

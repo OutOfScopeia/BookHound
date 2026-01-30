@@ -16,6 +16,7 @@ module App =
     open Microsoft.Maui.Media
     open Microsoft.Maui.ApplicationModel
     type Model = {
+        HasCameraPermissions: bool
         TrackedString: string
         Photos: FileResult list
      }
@@ -28,6 +29,7 @@ module App =
         | PhotoCaptured of FileResult option
 
     type CmdMsg =
+        | UpdateCameraPermStatus
         | CapturePhoto
         // remove
         | SemanticAnnounce of string
@@ -75,7 +77,7 @@ module App =
         // remove
         | SemanticAnnounce text -> semanticAnnounce text
 
-    let init () = { Photos = []; TrackedString = null }, []
+    let init () = { Photos = []; HasCameraPermissions = false; TrackedString = null }, []
 
     let update msg model =
         match msg with
@@ -92,6 +94,13 @@ module App =
         Application(
             ContentPage(
                     (VStack(spacing = 25.) {
+                        Label($"Camera perm: {model.HasCameraPermissions}")
+                            .semantics(SemanticHeadingLevel.Level1)
+                            .font(size = 24.)
+                            .textColor(if model.HasCameraPermissions then Colors.Green else Colors.Red)
+                            .centerTextHorizontal()
+                            .centerHorizontal()
+
                         Label("Enter the string to scan for")
                             .semantics(SemanticHeadingLevel.Level1)
                             .font(size = 24.)
@@ -117,6 +126,10 @@ module App =
                         Button("Capture Photo", CapturePhotoClicked)
                             .semantics(hint = "Take a photo")
                             .centerHorizontal()    
+                        
+                        //Button("Update Camera Perm Status", UpdateCameraPermStatus)
+                        //    .semantics(hint = "Confirm when done")
+                        //    .centerHorizontal()
                     })
                         .padding(30., 0., 30., 0.)
                         .centerVertical()

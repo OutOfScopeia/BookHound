@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <AndroidProjectFolder>Platforms/Android/</AndroidProjectFolder>
     <iOSProjectFolder>Platforms/iOS/</iOSProjectFolder>
@@ -7,76 +8,87 @@
     <TizenProjectFolder>Platforms/Tizen/</TizenProjectFolder>
     <ProjectGuid>{dbe60a66-0c64-4103-ba7b-dd5633e04541}</ProjectGuid>
   </PropertyGroup>
+
   <!-- Android emulator workaround -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
     <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
     <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
+
   <PropertyGroup>
-    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst;net8.0-windows10.0.19041.0</TargetFrameworks>
-    <!-- Design-time default for VS -->
-    <TargetFramework Condition="'$(TargetFramework)' == ''">net8.0-android</TargetFramework>
+    <!-- .NET 10 MAUI TFMs -->
+    <TargetFrameworks>
+      net10.0-android;
+      net10.0-ios;
+      net10.0-maccatalyst;
+      net10.0-windows10.0.19041.0
+    </TargetFrameworks>
+
+    <!-- VS design-time fallback -->
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net10.0-android</TargetFramework>
+
     <OutputType>Exe</OutputType>
     <RootNamespace>BookHoundApp</RootNamespace>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
     <EnableDefaultItems>false</EnableDefaultItems>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
-    <!-- Display name -->
+
+    <!-- App metadata -->
     <ApplicationTitle>BookHound</ApplicationTitle>
-    <!-- App Identifier -->
     <ApplicationId>com.cheekbytes.bookhound</ApplicationId>
     <ApplicationIdGuid>99FA52AF-7483-4E48-8A16-ED42DE49641C</ApplicationIdGuid>
-    <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
-    <!-- OS platform versions per TFM -->
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-android'">34.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">14.2</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net8.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
-    <!-- Tizen only really makes sense if you add a net8.0-tizen TFM; leave it inert for now -->
+
+    <!-- OS platform versions -->
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'">36.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
-  <!-- Shared F# code -->
-  <!-- Android -->
-  <!-- iOS -->
-  <!-- MacCatalyst -->
-  <!-- Windows -->
-  <!-- Tizen (only meaningful if you later add net8.0-tizen to TargetFrameworks) -->
-  <!-- Packages -->
+
   <ItemGroup>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
+
+    <!-- Android -->
     <AndroidResource Include="$(AndroidProjectFolder)Resources\**\*" />
     <AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*" />
     <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
     <Compile Include="$(AndroidProjectFolder)MainActivity.fs" />
     <Compile Include="$(AndroidProjectFolder)MainApplication.fs" />
-    <None Include="$(iOSProjectFolder)Info.plist" LogicalName="Info.plist" />
-    <Compile Include="$(iOSProjectFolder)AppDelegate.fs" />
-    <Compile Include="$(iOSProjectFolder)Program.fs" />
-    <None Include="$(MacCatalystProjectFolder)Info.plist" LogicalName="Info.plist" />
-    <Compile Include="$(MacCatalystProjectFolder)AppDelegate.fs" />
-    <Compile Include="$(MacCatalystProjectFolder)Program.fs" />
-    <Manifest Include="$(WindowsProjectFolder)app.manifest" />
-    <AppxManifest Include="$(WindowsProjectFolder)Package.appxmanifest" />
-    <Compile Include="$(WindowsProjectFolder)App.fs" />
-    <Compile Include="$(WindowsProjectFolder)Main.fs" />
-    <PackageReference Include="FSharp.Maui.WinUICompat" Version="1.1.0" />
-    <TizenManifestFile Include="$(TizenProjectFolder)tizen-manifest.xml" />
-    <Compile Include="$(TizenProjectFolder)Main.fs" />
+
+    <!-- iOS -->
+    <!-- <None Include="$(iOSProjectFolder)Info.plist" LogicalName="Info.plist" /> -->
+    <!-- <Compile Include="$(iOSProjectFolder)AppDelegate.fs" /> -->
+    <!-- <Compile Include="$(iOSProjectFolder)Program.fs" /> -->
+
+    <!-- MacCatalyst -->
+    <!-- <None Include="$(MacCatalystProjectFolder)Info.plist" LogicalName="Info.plist" /> -->
+    <!-- <Compile Include="$(MacCatalystProjectFolder)AppDelegate.fs" /> -->
+    <!-- <Compile Include="$(MacCatalystProjectFolder)Program.fs" /> -->
+
+    <!-- Windows -->
+    <!-- <Manifest Include="$(WindowsProjectFolder)app.manifest" /> -->
+    <!-- <AppxManifest Include="$(WindowsProjectFolder)Package.appxmanifest" /> -->
+    <!-- <Compile Include="$(WindowsProjectFolder)App.fs" /> -->
+    <!-- <Compile Include="$(WindowsProjectFolder)Main.fs" /> -->
+    <!-- <PackageReference Include="FSharp.Maui.WinUICompat" Version="1.1.0" /> -->
+
+    <!-- Tizen (inactive unless you add net10.0-tizen) -->
+    <!-- <TizenManifestFile Include="$(TizenProjectFolder)tizen-manifest.xml" /> -->
+    <!-- <Compile Include="$(TizenProjectFolder)Main.fs" /> -->
+
+    <!-- Packages -->
     <PackageReference Include="Fabulous" Version="2.4.0" />
     <PackageReference Include="Fabulous.MauiControls" Version="8.0.5" />
     <PackageReference Include="FSharp.Core" Version="8.0.100" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
-    <None Include=".gitattributes" />
-    <None Include=".gitignore" />
-    <None Include="Directory.Build.targets" />
-    <None Include="global.json" />
-    <None Include="README.md" />
   </ItemGroup>
+
 </Project>

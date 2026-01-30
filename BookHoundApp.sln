@@ -14,6 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{2B3019F4
 		Build\runVNC.sh = Build\runVNC.sh
 		Build\start-emulator.sh = Build\start-emulator.sh
 		Build\xstartup = Build\xstartup
+		global.json = global.json
+		Directory.Build.targets = Directory.Build.targets
+		README.md = README.md
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Global

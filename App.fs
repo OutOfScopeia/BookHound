@@ -15,6 +15,7 @@ module App =
     open Microsoft.Maui.Storage
     open Microsoft.Maui.Media
     open Microsoft.Maui.ApplicationModel
+
     type Model = {
         HasCameraPermissions: bool
         TrackedString: string
@@ -27,6 +28,8 @@ module App =
         | TargetStringRecognised
         | CapturePhotoClicked
         | PhotoCaptured of FileResult option
+        | UpdateCameraPermStatusClicked
+        | CameraPermissionStatusObtained of bool
 
     type CmdMsg =
         | UpdateCameraPermStatus
@@ -46,7 +49,7 @@ module App =
                 return true
         }
 
-    let capturePhoto =
+    let capturePhoto () =
         task {
             let! granted = ensureCameraPermissionAsync()
             match granted with
@@ -71,13 +74,21 @@ module App =
     let semanticAnnounce text =
         Cmd.ofSub(fun _ -> SemanticScreenReader.Announce(text))
 
+    let updateCameraPermStatus () =
+        task {
+            let! hasPerm = ensureCameraPermissionAsync()
+            return CameraPermissionStatusObtained hasPerm
+        }
+        |> Cmd.ofTaskMsg
+
     let mapCmd cmdMsg =
         match cmdMsg with
-        | CapturePhoto -> capturePhoto
+        | UpdateCameraPermStatus -> updateCameraPermStatus ()
+        | CapturePhoto -> capturePhoto ()
         // remove
         | SemanticAnnounce text -> semanticAnnounce text
 
-    let init () = { Photos = []; HasCameraPermissions = false; TrackedString = null }, []
+    let init () = { Photos = []; HasCameraPermissions = false; TrackedString = null }, [ UpdateCameraPermStatus ]
 
     let update msg model =
         match msg with
@@ -89,6 +100,8 @@ module App =
         | CapturePhotoClicked -> model, [ CapturePhoto ]
         | PhotoCaptured (Some photo) -> { model with Photos = photo :: model.Photos }, []
         | PhotoCaptured None -> model, []
+        | UpdateCameraPermStatusClicked -> model, [ UpdateCameraPermStatus ]
+        | CameraPermissionStatusObtained status -> { model with HasCameraPermissions = status }, []
 
     let view model =
         Application(
@@ -127,9 +140,9 @@ module App =
                             .semantics(hint = "Take a photo")
                             .centerHorizontal()    
                         
-                        //Button("Update Camera Perm Status", UpdateCameraPermStatus)
-                        //    .semantics(hint = "Confirm when done")
-                        //    .centerHorizontal()
+                        Button("Update Camera Perm Status", UpdateCameraPermStatusClicked)
+                            .semantics(hint = "bool")
+                            .centerHorizontal()
                     })
                         .padding(30., 0., 30., 0.)
                         .centerVertical()

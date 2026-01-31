@@ -2,6 +2,7 @@
 
 open Microsoft.Maui.Hosting
 open Fabulous.Maui
+open CommunityToolkit.Maui
 
 type MauiProgram =
     static member CreateMauiApp() =
@@ -13,4 +14,6 @@ type MauiProgram =
                     .AddFont("OpenSans-Regular.ttf", "OpenSansRegular")
                     .AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold")
                 |> ignore)
+            // Camera frame buffer access
+            .UseMauiCommunityToolkit()
             .Build()

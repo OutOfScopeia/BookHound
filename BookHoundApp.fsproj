@@ -70,10 +70,13 @@
     <!-- <TizenManifestFile Include="$(TizenProjectFolder)tizen-manifest.xml" /> -->
     <!-- <Compile Include="$(TizenProjectFolder)Main.fs" /> -->
     <!-- Packages -->
-    <PackageReference Include="Fabulous" Version="2.4.0" />
-    <PackageReference Include="Fabulous.MauiControls" Version="8.0.5" />
-    <PackageReference Include="FSharp.Core" Version="8.0.100" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
+    <PackageReference Include="Fabulous" Version="2.*" />
+    <PackageReference Include="Fabulous.MauiControls" Version="8.*" />
+    <PackageReference Include="FSharp.Core" Version="10.*" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.*" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.*" />
+    <!-- Camera frame buffer access -->
+    <PackageReference Include="CommunityToolkit.Maui" Version="9.*" />
+    <PackageReference Include="CommunityToolkit.Maui.Camera" Version="3.*" />
   </ItemGroup>
 </Project>

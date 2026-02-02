@@ -8,7 +8,7 @@
     <ProjectGuid>{dbe60a66-0c64-4103-ba7b-dd5633e04541}</ProjectGuid>
   </PropertyGroup>
   <!-- Android emulator workaround -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
     <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
@@ -17,13 +17,13 @@
   <PropertyGroup>
     <!-- .NET 10 MAUI TFMs -->
     <TargetFrameworks>
-      net10.0-android;
-      net10.0-ios;
-      net10.0-maccatalyst;
-      net10.0-windows10.0.19041.0
+      net9.0-android;
+      net9.0-ios;
+      net9.0-maccatalyst;
+      net9.0-windows10.0.19041.0
     </TargetFrameworks>
     <!-- VS design-time fallback -->
-    <TargetFramework Condition="'$(TargetFramework)' == ''">net10.0-android</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net9.0-android</TargetFramework>
     <OutputType>Exe</OutputType>
     <RootNamespace>BookHoundApp</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -37,46 +37,41 @@
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <!-- OS platform versions -->
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'">36.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'">14.2</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net10.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-android'">35.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-ios'">14.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
+
+  <!-- Android -->
+  <!-- <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'"> -->
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'">
+      <AndroidResource Include="$(AndroidProjectFolder)Resources\**\*" />
+      <AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*" />
+      <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
+  </ItemGroup>
+
   <ItemGroup>
+    <Compile Include="Camera.fs" />
+    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"  Condition="'$(TargetFrameworkIdentifier)' == 'android'"/>
+    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"   Condition="'$(TargetFrameworkIdentifier)' == 'android'"/>
+    <Compile Include="$(AndroidProjectFolder)MainApplication.fs" Condition="'$(TargetFrameworkIdentifier)' == 'android'"/>
+    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"    Condition="'$(TargetFrameworkIdentifier)' == 'android'"/>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
-    <!-- Android -->
-    <AndroidResource Include="$(AndroidProjectFolder)Resources\**\*" />
-    <AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*" />
-    <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
-    <Compile Include="$(AndroidProjectFolder)MainActivity.fs" />
-    <Compile Include="$(AndroidProjectFolder)MainApplication.fs" />
-    <!-- iOS -->
-    <!-- <None Include="$(iOSProjectFolder)Info.plist" LogicalName="Info.plist" /> -->
-    <!-- <Compile Include="$(iOSProjectFolder)AppDelegate.fs" /> -->
-    <!-- <Compile Include="$(iOSProjectFolder)Program.fs" /> -->
-    <!-- MacCatalyst -->
-    <!-- <None Include="$(MacCatalystProjectFolder)Info.plist" LogicalName="Info.plist" /> -->
-    <!-- <Compile Include="$(MacCatalystProjectFolder)AppDelegate.fs" /> -->
-    <!-- <Compile Include="$(MacCatalystProjectFolder)Program.fs" /> -->
-    <!-- Windows -->
-    <!-- <Manifest Include="$(WindowsProjectFolder)app.manifest" /> -->
-    <!-- <AppxManifest Include="$(WindowsProjectFolder)Package.appxmanifest" /> -->
-    <!-- <Compile Include="$(WindowsProjectFolder)App.fs" /> -->
-    <!-- <Compile Include="$(WindowsProjectFolder)Main.fs" /> -->
-    <!-- <PackageReference Include="FSharp.Maui.WinUICompat" Version="1.1.0" /> -->
-    <!-- Tizen (inactive unless you add net10.0-tizen) -->
-    <!-- <TizenManifestFile Include="$(TizenProjectFolder)tizen-manifest.xml" /> -->
-    <!-- <Compile Include="$(TizenProjectFolder)Main.fs" /> -->
-    <!-- Packages -->
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Fabulous" Version="2.*" />
     <PackageReference Include="Fabulous.MauiControls" Version="8.*" />
     <PackageReference Include="FSharp.Core" Version="10.*" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.*" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.*" />
-    <!-- Camera frame buffer access -->
-    <PackageReference Include="CommunityToolkit.Maui" Version="9.*" />
-    <PackageReference Include="CommunityToolkit.Maui.Camera" Version="3.*" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'">
+    <PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.3.4" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.3.4" />
+    <PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.3.4" />
   </ItemGroup>
 </Project>

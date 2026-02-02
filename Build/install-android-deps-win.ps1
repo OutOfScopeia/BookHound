@@ -1,6 +1,7 @@
 # install cmdline tools for Android SDK first
 
 $env:ANDROID_SDK_ROOT = "C:\Sandbox\Android"
+# $env:JAVA_HOME = "C:\Sandbox\Android"
 
 # Persist the environment variable for future sessions
 [System.Environment]::SetEnvironmentVariable(
@@ -20,9 +21,13 @@ if (-not (Test-Path $sdkManager)) {
 # Install components
 & winget install Microsoft.OpenJDK.17
 & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "platform-tools"
-& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "platforms;android-34"
-& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "build-tools;34.0.0"
-& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "system-images;android-34;google_apis;x86_64"
+# & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "platforms;android-34"
+# & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "build-tools;34.0.0"
+# & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "system-images;android-34;google_apis;x86_64"
+
+& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "platforms;android-35"
+& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "build-tools;35.0.0"
+& $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "system-images;android-35;google_apis;x86_64"
 
 # & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "platforms;android-36"
 # & $sdkManager --sdk_root=$env:ANDROID_SDK_ROOT "build-tools;36.0.0"

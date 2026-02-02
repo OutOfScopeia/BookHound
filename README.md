@@ -83,3 +83,49 @@ Inside the container:
 rm -rf ~/.vscode-server*  
 rm -rf ~/.vscode-remote  
 ```
+
+
+It is a cross-platform app, but for now i build it with the net9.0-android workload. I need the android app to be able to access camera frame buffers. The idea is to be able to take maybe 10 pictures per second for further processing. I will sort out the messaging and MVU pattern on my own, I just need help with the camera frames access.
+
+
+6. Where this plugs into Fabulous
+
+You said you’ll handle messaging, so conceptually:
+
+startCamera
+    activity
+    activity
+    (fun frame ->
+        // dispatch frame into MVU
+        // or push into channel / mailbox
+    )
+
+I strongly recommend:
+* MailboxProcessor or System.Threading.Channels
+* Do not block the analyzer thread
+
+7. Performance notes (important)
+
+✔️ 10 FPS is trivial for CameraX
+✔️ YUV is much faster than JPEG
+✔️ Avoid allocating if possible (later optimization: buffer pooling)
+
+If you later want:
+RGB → convert from YUV (costly)
+GPU / ML → use ImageProxy.Image + native interop
+
+8. What I did not include (on purpose)
+
+Preview UI
+Permission flow
+MVU dispatch
+Cross-platform abstraction
+This keeps it clean and Android-focused.
+
+If you want next steps
+I can:
+Add preview + analysis together
+Show zero-copy unsafe buffer access (fastest possible)
+Wrap this behind a platform service usable from shared code
+Help you throttle / drop frames intentionally
+Convert YUV → RGB efficiently in F#

@@ -1,9 +1,3 @@
-// Camera startup function (Android-only)
-// This is typically called from your MainActivity.
-// * KEEP_ONLY_LATEST avoids frame pileup
-// * Single-thread executor = predictable latency
-// * No preview surface needed
-
 namespace BookHoundApp.Camera.Android
 
 module CameraStartup =

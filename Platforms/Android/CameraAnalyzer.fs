@@ -25,13 +25,15 @@ type FrameAnalyzer(onFrame : CameraFrame -> unit) =
 
                     let planes = image.GetPlanes()
 
-                    let yBuf = planes.[0].Buffer
-                    let uBuf = planes.[1].Buffer
-                    let vBuf = planes.[2].Buffer
+                    let yBuf, uBuf, vBuf =
+                        planes.[0].Buffer,
+                        planes.[1].Buffer,
+                        planes.[2].Buffer
 
-                    let y = Array.zeroCreate<byte> (yBuf.Remaining())
-                    let u = Array.zeroCreate<byte> (uBuf.Remaining())
-                    let v = Array.zeroCreate<byte> (vBuf.Remaining())
+                    let y, u, v =
+                        Array.zeroCreate<byte> (yBuf.Remaining()),
+                        Array.zeroCreate<byte> (uBuf.Remaining()),
+                        Array.zeroCreate<byte> (vBuf.Remaining())
 
                     yBuf.Get(y) |> ignore
                     uBuf.Get(u) |> ignore

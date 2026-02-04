@@ -50,9 +50,10 @@
   <!-- Android -->
   <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'Android'"> -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+      <AndroidManifestPermission Include="android.permission.CAMERA" />
       <AndroidResource Include="$(AndroidProjectFolder)Resources\**\*" />
       <AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*" />
-      <!-- <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" /> -->
+      <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
   </ItemGroup>
 
   <ItemGroup>

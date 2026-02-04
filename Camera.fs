@@ -8,3 +8,7 @@ type CameraFrame =
     U      : byte[]
     V      : byte[]
     TimestampNs : int64 }
+
+type ICameraService =
+    abstract StartPreview :
+        onFrame: (CameraFrame -> unit) -> obj

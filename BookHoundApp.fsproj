@@ -43,27 +43,24 @@
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-    <!-- <AndroidGenerateManifest>false</AndroidGenerateManifest> -->
+
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == 'Android'">
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
 
-  <!-- Android -->
-  <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'Android'"> -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-      <AndroidManifestPermission Include="android.permission.CAMERA" />
-      <AndroidResource Include="$(AndroidProjectFolder)Resources\**\*" />
-      <AndroidAsset Include="$(AndroidProjectFolder)Assets\**\*" />
-      <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
-  </ItemGroup>
+  <Target Name="VerifyAndroidFiles" BeforeTargets="CoreCompile" Condition="'$(TargetFrameworkIdentifier)' == 'Android'">
+    <Message Text="ANDROID COMPILE: @(Compile)" Importance="High" />
+  </Target>
 
   <ItemGroup>
     <Compile Include="Camera.fs" />
+    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"      Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
+    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"       Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
+    <Compile Include="$(AndroidProjectFolder)CameraService.fs"       Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
+    <Compile Include="$(AndroidProjectFolder)MainApplication.fs"     Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
+    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"        Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
-    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"  Condition="'$(TargetFramework)' == 'net9.0-android'"/>
-    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"   Condition="'$(TargetFramework)' == 'net9.0-android'"/>
-    <Compile Include="$(AndroidProjectFolder)MainApplication.fs" Condition="'$(TargetFramework)' == 'net9.0-android'"/>
-    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"    Condition="'$(TargetFramework)' == 'net9.0-android'"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -73,10 +70,22 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.*" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.*" />
   </ItemGroup>
+  <!-- Android -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-    <!-- <PackageReference Include="Xamarin.AndroidX.Camera.Core" Version="1.3.4" /> -->
+    <!-- <AndroidGenerateManifest>false</AndroidGenerateManifest> -->
+    <AndroidManifestPermission Include="android.permission.CAMERA" />
+    <AndroidResource Include="$(AndroidProjectFolder)Resources/**/*" />
+    <AndroidAsset Include="$(AndroidProjectFolder)Assets/**/*" />
+    <AndroidManifest Include="$(AndroidProjectFolder)AndroidManifest.xml" />
+
+    <PackageReference Include="Xamarin.AndroidX.Camera.Core" Version="1.3.4" />
     <PackageReference Include="Xamarin.AndroidX.Camera.Camera2" Version="1.3.4" />
     <PackageReference Include="Xamarin.AndroidX.Camera.Lifecycle" Version="1.3.4" />
     <PackageReference Include="Xamarin.AndroidX.Camera.View" Version="1.3.4" />
   </ItemGroup>
 </Project>
+
+<!-- In MAUI + F#:
+- Use TargetFrameworkIdentifier == android for code
+- Use TargetFramework == netX-android for resources / packaging
+- Never mix them for .fs files -->

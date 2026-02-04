@@ -9,8 +9,9 @@ open BookHoundApp.Camera
 open BookHoundApp.Camera.Android
 
 [<Activity(
-        //    Name = "com.cheekbytes.bookhound.MainActivity",
+           Name = "com.cheekbytes.bookhound.MainActivity",
            Theme = "@style/Maui.SplashTheme",
+           Exported = true,
            MainLauncher = true,
            Label = "BookHoundApp",
            ConfigurationChanges = (ConfigChanges.ScreenSize ||| ConfigChanges.Orientation ||| ConfigChanges.UiMode ||| ConfigChanges.ScreenLayout ||| ConfigChanges.SmallestScreenSize ||| ConfigChanges.Density))>]

@@ -10,7 +10,7 @@ open Java.Lang
 type FrameAnalyzer(onFrame : CameraFrame -> unit) =
     inherit Object()
 
-    // Target ~10 FPS
+    // Target ~10 FPS - every 100ms. The timestamp type on IImageProxy is "nanoseconds since boot" (a tick is 1ns).
     let targetIntervalNs = 100_000_000L
     let mutable lastTimestamp = 0L
 

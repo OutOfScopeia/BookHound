@@ -27,7 +27,7 @@
 	</ItemGroup>
 	
 	<!-- Added to make .NET Meteor work? -->
-	<ItemGroup>
+	<!-- <ItemGroup>
 		<Compile Remove="**/*.cs" />
-	</ItemGroup>
+	</ItemGroup> -->
 </Project>

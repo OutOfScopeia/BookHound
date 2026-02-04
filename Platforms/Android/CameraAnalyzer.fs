@@ -5,33 +5,46 @@ namespace BookHoundApp.Camera.Android
 
 open AndroidX.Camera.Core
 open BookHoundApp.Camera
-open Java.Util.Concurrent
+open Java.Lang
 
 type FrameAnalyzer(onFrame : CameraFrame -> unit) =
+    inherit Object()
+
+    // Target ~10 FPS
+    let targetIntervalNs = 100_000_000L
+    let mutable lastTimestamp = 0L
+
     interface ImageAnalysis.IAnalyzer with
-        member _.Analyze(image: ImageProxy) =
+        member _.Analyze(image: IImageProxy) =
             try
-                let planes = image.Planes
+                let ts = image.ImageInfo.Timestamp
 
-                let yBuf = planes.[0].Buffer
-                let uBuf = planes.[1].Buffer
-                let vBuf = planes.[2].Buffer
+                // Throttle to ~10 FPS
+                if ts - lastTimestamp >= targetIntervalNs then
+                    lastTimestamp <- ts
 
-                let y = Array.zeroCreate<byte> yBuf.Remaining()
-                let u = Array.zeroCreate<byte> uBuf.Remaining()
-                let v = Array.zeroCreate<byte> vBuf.Remaining()
+                    let planes = image.GetPlanes()
 
-                yBuf.Get(y)
-                uBuf.Get(u)
-                vBuf.Get(v)
+                    let yBuf = planes.[0].Buffer
+                    let uBuf = planes.[1].Buffer
+                    let vBuf = planes.[2].Buffer
 
-                onFrame {
-                    Width = image.Width
-                    Height = image.Height
-                    Y = y
-                    U = u
-                    V = v
-                    TimestampNs = image.ImageInfo.Timestamp
-                }
+                    let y = Array.zeroCreate<byte> (yBuf.Remaining())
+                    let u = Array.zeroCreate<byte> (uBuf.Remaining())
+                    let v = Array.zeroCreate<byte> (vBuf.Remaining())
+
+                    yBuf.Get(y) |> ignore
+                    uBuf.Get(u) |> ignore
+                    vBuf.Get(v) |> ignore
+
+                    onFrame {
+                        Width       = image.Width
+                        Height      = image.Height
+                        Y           = y
+                        U           = u
+                        V           = v
+                        TimestampNs = ts
+                    }
             finally
-                image.Close() // CRITICAL: avoid backpressure stall
+                // ALWAYS close, even if frame is skipped
+                image.Close()

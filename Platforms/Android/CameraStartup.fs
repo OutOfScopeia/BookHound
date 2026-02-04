@@ -4,47 +4,49 @@
 // * Single-thread executor = predictable latency
 // * No preview surface needed
 
-open AndroidX.Camera.Lifecycle
-open AndroidX.Camera.Core
-open AndroidX.Camera.Camera2
-open AndroidX.Core.Content
-open Android.Content
-open AndroidX.Lifecycle
+namespace BookHoundApp.Camera.Android
 
-let startCamera (context: Context) (lifecycleOwner: ILifecycleOwner) (onFrame: CameraFrame -> unit) =
+module CameraStartup =
+    open AndroidX.Camera.Lifecycle
+    open AndroidX.Camera.Core
+    open AndroidX.Camera.Camera2
+    open AndroidX.Core.Content
+    open Android.Content
+    open AndroidX.Lifecycle
+    open BookHoundApp.Camera
+    open Java.Util.Concurrent
 
-    let cameraProviderFuture = ProcessCameraProvider.GetInstance(context)
+    let startCamera (context: Context) (lifecycleOwner: ILifecycleOwner) (onFrame: CameraFrame -> unit) =
 
-    cameraProviderFuture.AddListener(
-        Java.Lang.Runnable(fun () ->
-            let cameraProvider = cameraProviderFuture.Get()
+        let cameraProviderFuture = ProcessCameraProvider.GetInstance(context)
 
-            let analysis =
-                ImageAnalysis.Builder()
-                    .SetBackpressureStrategy(
-                        ImageAnalysis.StrategyKeepOnlyLatest)
-                    .SetTargetFrameRate(
-                        Range(10, 10)) // ≈10 FPS
-                    .Build()
+        cameraProviderFuture.AddListener(
+            new Java.Lang.Runnable(fun () ->
+                let cameraProvider = cameraProviderFuture.Get() :?> ProcessCameraProvider
 
-            let executor = Executors.NewSingleThreadExecutor()
+                let analysis =
+                    ImageAnalysis.Builder()
+                        .SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
+                        .Build()
 
-            analysis.SetAnalyzer(
-                executor,
-                FrameAnalyzer(onFrame))
+                let executor = Executors.NewSingleThreadExecutor()
 
-            let cameraSelector =
-                CameraSelector.Builder()
-                    .RequireLensFacing(CameraSelector.LensFacingBack)
-                    .Build()
+                analysis.SetAnalyzer(
+                    executor,
+                    new FrameAnalyzer(onFrame))
 
-            cameraProvider.UnbindAll()
+                let cameraSelector =
+                    CameraSelector.Builder()
+                        .RequireLensFacing(CameraSelector.LensFacingBack)
+                        .Build()
 
-            cameraProvider.BindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                analysis
-            ) |> ignore
-        ),
-        ContextCompat.GetMainExecutor(context)
-    )
+                cameraProvider.UnbindAll()
+
+                cameraProvider.BindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    analysis
+                ) |> ignore
+            ),
+            ContextCompat.GetMainExecutor(context)
+        )

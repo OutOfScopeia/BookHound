@@ -8,7 +8,8 @@ open Microsoft.Maui
 open BookHoundApp.Camera
 open BookHoundApp.Camera.Android
 
-[<Activity(Name = "com.cheekbytes.bookhound.MainActivity",
+[<Activity(
+        //    Name = "com.cheekbytes.bookhound.MainActivity",
            Theme = "@style/Maui.SplashTheme",
            MainLauncher = true,
            Label = "BookHoundApp",

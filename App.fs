@@ -8,6 +8,11 @@ open Microsoft.Maui
 open Microsoft.Maui.Graphics
 open Microsoft.Maui.Accessibility
 open Microsoft.Maui.Primitives
+open AndroidX.Camera.View
+
+open Microsoft.Maui.Controls
+open Microsoft.Maui.Platform
+// open BookHoundApp.Camera.Android
 
 open type Fabulous.Maui.View
 
@@ -15,7 +20,7 @@ module App =
     open Microsoft.Maui.Storage
     open Microsoft.Maui.Media
     open Microsoft.Maui.ApplicationModel
-
+    
     type Model = {
         HasCameraPermissions: bool
         TrackedString: string
@@ -23,6 +28,7 @@ module App =
      }
 
     type Msg =
+        //| FrameCaptured of CommunityToolkit.Maui.Core   //CameraFrameBuffer
         | TargetStringChanged of string
         | TargetStringEntered
         | TargetStringRecognised
@@ -48,7 +54,6 @@ module App =
             else
                 return true
         }
-
     let capturePhoto () =
         task {
             let! granted = ensureCameraPermissionAsync()
@@ -103,7 +108,30 @@ module App =
         | UpdateCameraPermStatusClicked -> model, [ UpdateCameraPermStatus ]
         | CameraPermissionStatusObtained status -> { model with HasCameraPermissions = status }, []
 
+
     let view model =
+
+
+        // let cameraPreviewView () =
+        // View.AndroidView(
+        //     create = (fun context ->
+        //         let previewView = new PreviewView(context)
+        //         previewView
+        //     ),
+        //     update = (fun previewView ->
+        //         let activity =
+        //             previewView.Context :?> Android.App.Activity
+
+        //         CameraStartup.startCamera
+        //             previewView.Context
+        //             activity
+        //             previewView
+        //             (fun frame ->
+        //                 // 🔥 You get ~10–30 fps here
+        //                 ()
+        //             )
+        //     )
+
         Application(
             ContentPage(
                     (VStack(spacing = 25.) {

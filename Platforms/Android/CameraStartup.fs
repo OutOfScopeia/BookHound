@@ -12,6 +12,7 @@ module CameraStartup =
     open Java.Util.Concurrent
     open Java.Lang
 
+    [<CompilerMessage("Compiling CameraStartup.fs", 42, IsError = false)>]
     let startCamera (context: Context) (lifecycleOwner: ILifecycleOwner) (previewView: PreviewView) (onFrame: CameraFrame -> unit) =
 
         let cameraProviderFuture = ProcessCameraProvider.GetInstance context

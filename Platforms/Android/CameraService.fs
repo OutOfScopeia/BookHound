@@ -6,9 +6,11 @@ open Android.App
 
 type AndroidCameraService(activity: Activity) =
     interface ICameraService with
+        
+        [<CompilerMessage("Compiling CameraServices.fs", 42, IsError = false)>]
         member _.StartPreview(onFrame) =
             let previewView = new PreviewView(activity)
 
-            CameraStartup.startCamera activity (activity :?> AndroidX.Lifecycle.ILifecycleOwner) previewView onFrame
+            // CameraStartup.startCamera activity (activity :?> AndroidX.Lifecycle.ILifecycleOwner) previewView onFrame
 
             previewView :> obj

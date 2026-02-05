@@ -44,24 +44,30 @@
     <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == 'Android'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
 
-  <Target Name="VerifyAndroidFiles" BeforeTargets="CoreCompile" Condition="'$(TargetFrameworkIdentifier)' == 'Android'">
+  <Target Name="VerifyAndroidFiles" BeforeTargets="CoreCompile" Condition="'$(TargetFramework)' == 'net9.0-android'">
     <Message Text="ANDROID COMPILE: @(Compile)" Importance="High" />
   </Target>
 
   <ItemGroup>
     <Compile Include="Camera.fs" />
-    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"      Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
-    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"       Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
-    <Compile Include="$(AndroidProjectFolder)CameraService.fs"       Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
-    <Compile Include="$(AndroidProjectFolder)MainApplication.fs"     Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
-    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"        Condition="'$(TargetFrameworkIdentifier)' == 'Android'"/>
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
   </ItemGroup>
+  
+  <!-- Android files are completely ignored when conditioned with TargetFrameworkIdentifier. -->
+  <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'"> -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs" />
+    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"  />
+    <Compile Include="$(AndroidProjectFolder)CameraService.fs"  />
+    <Compile Include="$(AndroidProjectFolder)MainApplication.fs"/>
+    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"   />
+  </ItemGroup>
+  
 
   <ItemGroup>
     <PackageReference Include="Fabulous" Version="2.*" />

@@ -68,7 +68,6 @@
     <Compile Include="$(AndroidProjectFolder)MainActivity.fs"   />
   </ItemGroup>
   
-
   <ItemGroup>
     <PackageReference Include="Fabulous" Version="2.*" />
     <PackageReference Include="Fabulous.MauiControls" Version="8.*" />
@@ -91,7 +90,7 @@
   </ItemGroup>
 </Project>
 
-<!-- In MAUI + F#:
+<!-- In MAUI + F#: (this is a nice theory, but completely wrong for this .fsproj)
 - Use TargetFrameworkIdentifier == android for code
 - Use TargetFramework == netX-android for resources / packaging
 - Never mix them for .fs files -->

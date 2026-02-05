@@ -14,14 +14,4 @@ type MainApplication(handle: IntPtr, owningTransfer: JniHandleOwnership) =
     inherit MauiApplication(handle, owningTransfer)
 
     override _.CreateMauiApp() =
-        let builder =
-            MauiApp
-                .CreateBuilder()
-                .UseFabulousApp(App.program)
-
-        builder.Services.AddSingleton<ICameraService>(fun _ ->
-            AndroidCameraService(this) :> ICameraService
-        )
-        |> ignore
-
-        builder.Build()
+            MauiProgram.CreateMauiApp()

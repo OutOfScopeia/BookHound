@@ -54,7 +54,3 @@ module CameraStartup =
             ),
             ContextCompat.GetMainExecutor context
         )
-
-
-
-

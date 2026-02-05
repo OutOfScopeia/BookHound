@@ -4,12 +4,15 @@ open Fabulous
 open Fabulous.Maui
 open Microsoft.Maui.Hosting
 open Microsoft.Extensions.DependencyInjection
+open System
+open BookHoundApp.Camera
 
 type MauiProgram =
     static member CreateMauiApp() =
+        
         let builder =
             MauiApp.CreateBuilder()
-                .UseFabulousApp(App.program)
+                .UseFabulousApp(App.program None)
                 // Fabulous template app remnant - yeet this
                 .ConfigureFonts(fun fonts ->
                     fonts
@@ -22,3 +25,12 @@ type MauiProgram =
         AndroidCameraRegistration.configure builder
 
         builder.Build()
+
+        // let createApp (services : IServiceProvider) =
+        // let cameraService =
+        //     services.GetService<ICameraService>()
+
+        // Program.stateful
+        //     (init cameraService)
+        //     update
+        //     view

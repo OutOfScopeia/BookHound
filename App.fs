@@ -9,10 +9,10 @@ open Microsoft.Maui.Graphics
 open Microsoft.Maui.Accessibility
 open Microsoft.Maui.Primitives
 open AndroidX.Camera.View
-
-open Microsoft.Maui.Controls
 open Microsoft.Maui.Platform
-// open BookHoundApp.Camera.Android
+open Microsoft.Maui.Controls
+open Microsoft.Extensions.DependencyInjection
+open BookHoundApp.Camera
 
 open type Fabulous.Maui.View
 
@@ -22,13 +22,13 @@ module App =
     open Microsoft.Maui.ApplicationModel
     
     type Model = {
+        CameraService : ICameraService option
         HasCameraPermissions: bool
         TrackedString: string
         Photos: FileResult list
      }
 
     type Msg =
-        //| FrameCaptured of CommunityToolkit.Maui.Core   //CameraFrameBuffer
         | TargetStringChanged of string
         | TargetStringEntered
         | TargetStringRecognised
@@ -42,6 +42,8 @@ module App =
         | CapturePhoto
         // remove
         | SemanticAnnounce of string
+
+    let cameraViewRef = ViewRef<obj>()
 
     let ensureCameraPermissionAsync() =
         task {
@@ -93,7 +95,13 @@ module App =
         // remove
         | SemanticAnnounce text -> semanticAnnounce text
 
-    let init () = { Photos = []; HasCameraPermissions = false; TrackedString = null }, [ UpdateCameraPermStatus ]
+    let init (cameraService : ICameraService option) () =
+        {
+            CameraService = cameraService
+            HasCameraPermissions = false
+            Photos = []
+            TrackedString = null
+        }, [ UpdateCameraPermStatus ]
 
     let update msg model =
         match msg with
@@ -109,32 +117,62 @@ module App =
         | CameraPermissionStatusObtained status -> { model with HasCameraPermissions = status }, []
 
 
+    // let cameraPreviewView () =
+    // View.AndroidView(
+    //     create = (fun context ->
+    //         let previewView = new PreviewView(context)
+    //         previewView
+    //     ),
+    //     update = (fun previewView ->
+    //         let activity =
+    //             previewView.Context :?> Android.App.Activity
+
+    //         CameraStartup.startCamera
+    //             previewView.Context
+    //             activity
+    //             previewView
+    //             (fun frame ->
+    //                 // 🔥 You get ~10–30 fps here
+    //                 ()
+    //             )
+    //     )
+    // let getCameraService () =
+    //     Application.Current.Services.GetService<ICameraService>()
+
+    let tryGetCameraService () =
+        Application.Current
+        |> Option.ofObj
+        |> Option.bind (fun app ->
+            app.Handler.MauiContext
+            |> Option.ofObj
+            |> Option.map (fun ctx -> ctx.Services.GetService<ICameraService>())
+        )
+
     let view model =
-
-
-        // let cameraPreviewView () =
-        // View.AndroidView(
-        //     create = (fun context ->
-        //         let previewView = new PreviewView(context)
-        //         previewView
-        //     ),
-        //     update = (fun previewView ->
-        //         let activity =
-        //             previewView.Context :?> Android.App.Activity
-
-        //         CameraStartup.startCamera
-        //             previewView.Context
-        //             activity
-        //             previewView
-        //             (fun frame ->
-        //                 // 🔥 You get ~10–30 fps here
-        //                 ()
-        //             )
-        //     )
-
         Application(
             ContentPage(
                     (VStack(spacing = 25.) {
+                        // // 📸 CAMERA PREVIEW
+                        // View.NativeView(cameraViewRef)
+                        //     .height(300.)
+                        //     .width(300.)
+                        //     .backgroundColor(Colors.Black)
+
+                        match tryGetCameraService() with
+                        | Some camera ->
+                            ViewElement.AndroidView(
+                                create = fun _ ->
+                                    camera.StartPreview(fun frame ->
+                                        // you now have CameraFrame here 🎉
+                                        ()
+                                    ),
+                                update = fun _ _ -> ()
+                            )
+                            .height(300.)
+                        | None ->
+                            Label("Camera not available")
+
+
                         Label($"Camera perm: {model.HasCameraPermissions}")
                             .semantics(SemanticHeadingLevel.Level1)
                             .font(size = 24.)
@@ -177,4 +215,4 @@ module App =
             )
         )
 
-    let program = Program.statefulWithCmdMsg init update view mapCmd
+    let program (cameraService: ICameraService option) = Program.statefulWithCmdMsg (init cameraService) update view mapCmd

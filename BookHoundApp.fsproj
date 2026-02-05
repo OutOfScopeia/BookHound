@@ -7,12 +7,14 @@
     <TizenProjectFolder>Platforms/Tizen/</TizenProjectFolder>
     <ProjectGuid>{dbe60a66-0c64-4103-ba7b-dd5633e04541}</ProjectGuid>
   </PropertyGroup>
-  <!-- Android emulator workaround -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+    <!-- Android emulator workaround -->
     <AndroidUseFastDeployment>false</AndroidUseFastDeployment>
     <AndroidFastDeploymentType>None</AndroidFastDeploymentType>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <!-- For per-project #if conditioning, currently not used -->
+    <!-- <DefineConstants>$(DefineConstants);ANDROID</DefineConstants> -->
   </PropertyGroup>
   <PropertyGroup>
     <!-- .NET 10 MAUI TFMs -->
@@ -43,21 +45,14 @@
     <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">10.0.17763.0</TargetPlatformMinVersion>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
-  </PropertyGroup>
-
   <Target Name="VerifyAndroidFiles" BeforeTargets="CoreCompile" Condition="'$(TargetFramework)' == 'net9.0-android'">
     <Message Text="ANDROID COMPILE: @(Compile)" Importance="High" />
   </Target>
-
   <ItemGroup>
     <Compile Include="Camera.fs" />
     <Compile Include="App.fs" />
     <Compile Include="MauiProgram.fs" />
   </ItemGroup>
-  
   <!-- Android files are completely ignored when conditioned with TargetFrameworkIdentifier. -->
   <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'"> -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
@@ -67,7 +62,6 @@
     <Compile Include="$(AndroidProjectFolder)MainApplication.fs"/>
     <Compile Include="$(AndroidProjectFolder)MainActivity.fs"   />
   </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Include="Fabulous" Version="2.*" />
     <PackageReference Include="Fabulous.MauiControls" Version="8.*" />

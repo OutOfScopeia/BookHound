@@ -1,35 +1,23 @@
 namespace BookHoundApp.Camera.Android
 
-open Android.Content
+open Android.App
 open AndroidX.Camera.View
 open AndroidX.Lifecycle
 open BookHoundApp.Camera
+open Microsoft.Maui.ApplicationModel
+open Microsoft.Maui
 
-type AndroidCameraService (context: Context, lifecycleOwner: ILifecycleOwner) =
-
+type AndroidCameraService (activity: Activity) =
     interface ICameraService with
-
-        [<CompilerMessage("Compiling CameraServices.fs", 42, IsError = false)>]
         member _.StartPreview(onFrame) =
 
-            let previewView = new PreviewView(context)
+            let previewView = new PreviewView(activity)
 
-            CameraStartup.startCamera context lifecycleOwner previewView onFrame
+            let lifecycleOwner =
+                Platform.CurrentActivity
+                :?> MauiAppCompatActivity
+                :> ILifecycleOwner
+
+            CameraStartup.startCamera activity lifecycleOwner previewView onFrame
 
             previewView :> obj
-
-
-// open AndroidX.Camera.View
-// open BookHoundApp.Camera
-// open Android.App
-
-// type AndroidCameraService(activity: Activity) =
-//     interface ICameraService with
-        
-//         [<CompilerMessage("Compiling CameraServices.fs", 42, IsError = false)>]
-//         member _.StartPreview(onFrame) =
-//             let previewView = new PreviewView(activity)
-
-//             CameraStartup.startCamera activity (activity :?> AndroidX.Lifecycle.ILifecycleOwner) previewView onFrame
-
-//             previewView :> obj

@@ -7,7 +7,6 @@ open AndroidX.Camera.Core
 open BookHoundApp.Camera
 open Java.Lang
 
-[<CompilerMessage("Compiling CameraAnalyzer.fs", 42, IsError = false)>]
 type FrameAnalyzer(onFrame : CameraFrame -> unit) =
     inherit Object()
 

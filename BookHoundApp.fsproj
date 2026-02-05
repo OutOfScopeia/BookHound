@@ -48,20 +48,21 @@
   <Target Name="VerifyAndroidFiles" BeforeTargets="CoreCompile" Condition="'$(TargetFramework)' == 'net9.0-android'">
     <Message Text="ANDROID COMPILE: @(Compile)" Importance="High" />
   </Target>
+  <!-- Android files are completely ignored when conditioned with TargetFrameworkIdentifier. -->
+  <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'"> -->
+<!-- MauiProgram.Android.fs -> MauiProgram.fs -> MainApplication.fs -->
   <ItemGroup>
     <Compile Include="Camera.fs" />
     <Compile Include="App.fs" />
+    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"      Condition="'$(TargetFramework)' == 'net9.0-android'"/>
+    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"       Condition="'$(TargetFramework)' == 'net9.0-android'"/>
+    <Compile Include="$(AndroidProjectFolder)CameraService.fs"       Condition="'$(TargetFramework)' == 'net9.0-android'"/>
+    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"        Condition="'$(TargetFramework)' == 'net9.0-android'"/>
+    <Compile Include="$(AndroidProjectFolder)MauiProgram.Android.fs" Condition="'$(TargetFramework)' == 'net9.0-android'"/>
     <Compile Include="MauiProgram.fs" />
+    <Compile Include="$(AndroidProjectFolder)MainApplication.fs"     Condition="'$(TargetFramework)' == 'net9.0-android'"/>
   </ItemGroup>
-  <!-- Android files are completely ignored when conditioned with TargetFrameworkIdentifier. -->
-  <!-- <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == 'android'"> -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-    <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs" />
-    <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"  />
-    <Compile Include="$(AndroidProjectFolder)CameraService.fs"  />
-    <Compile Include="$(AndroidProjectFolder)MainApplication.fs"/>
-    <Compile Include="$(AndroidProjectFolder)MainActivity.fs"   />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Fabulous" Version="2.*" />
     <PackageReference Include="Fabulous.MauiControls" Version="8.*" />

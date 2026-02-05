@@ -12,24 +12,21 @@ module CameraStartup =
     open Java.Util.Concurrent
     open Java.Lang
 
-    [<CompilerMessage("Compiling CameraStartup.fs", 42, IsError = false)>]
     let startCamera (context: Context) (lifecycleOwner: ILifecycleOwner) (previewView: PreviewView) (onFrame: CameraFrame -> unit) =
 
         let cameraProviderFuture = ProcessCameraProvider.GetInstance context
 
         cameraProviderFuture.AddListener(
-            new Java.Lang.Runnable(fun () ->
+            new Runnable(fun () ->
                 let cameraProvider = cameraProviderFuture.Get() :?> ProcessCameraProvider
 
-                let preview =
-                    Preview.Builder().Build()
+                let preview = new Preview.Builder() |> fun b -> b.Build()
 
                 preview.SetSurfaceProvider previewView.SurfaceProvider
 
                 let analysis =
-                    ImageAnalysis.Builder()
-                        .SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest)
-                        .Build()
+                    new ImageAnalysis.Builder()
+                    |> fun b -> b.SetBackpressureStrategy(ImageAnalysis.StrategyKeepOnlyLatest).Build()
 
                 analysis.SetAnalyzer(
                     Executors.NewSingleThreadExecutor(),

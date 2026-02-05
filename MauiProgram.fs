@@ -1,18 +1,4 @@
-﻿// #warning "MauiProgram.fs is being compiled"
-// namespace BookHoundApp
-
-// open Fabulous
-// open Fabulous.Maui
-// open Microsoft.Maui.Hosting
-
-// type MauiProgram =
-//     static member CreateMauiApp() =
-//         MauiApp
-//             .CreateBuilder()
-//             .UseFabulousApp(App.program)
-//             .Build()
-
-namespace BookHoundApp
+﻿namespace BookHoundApp
 
 open Fabulous
 open Fabulous.Maui
@@ -31,13 +17,8 @@ type MauiProgram =
                         .AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold")
                     |> ignore)
 
-// #if ANDROID
-//         builder
-//             .Services
-//             .AddSingleton<ICameraService>(fun (_: System.IServiceProvider) ->
-//                 let activity = Platform.CurrentActivity :?> Android.App.Activity
-//                 activity |> AndroidCameraService :> ICameraService
-//         )
-//         |> ignore
-// #endif
+        // This call only exists on Android builds
+        // because the module only exists there
+        AndroidCameraRegistration.configure builder
+
         builder.Build()

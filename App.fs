@@ -114,9 +114,9 @@ module App =
         // remove
         | SemanticAnnounce text -> semanticAnnounce text
 
-    let init (cameraService : ICameraService option) () =
+    let init () =
         {
-            CameraService = cameraService
+            CameraService = None
             // CameraPreview = None
             HasCameraPermissions = false
             Photos = []
@@ -136,16 +136,11 @@ module App =
             let cmds = if status = model.HasCameraPermissions then [] else [ GetCameraService ]
             { model with HasCameraPermissions = status }, cmds
 
-
         | CameraServiceObtained (Some cs) ->
             match cameraHostRef.TryValue with
             | Some host when host.Content = null ->
-                cs.AttachPreview(
-                    host,
-                    fun frame ->
-                        // frames arrive here 🎥🔥
-                        ()
-                )
+                let preview = cs.StartPreview(fun frame -> ())
+                host.Content <- preview :?> View
             | _ -> ()
 
             { model with CameraService = Some cs }, []
@@ -212,4 +207,4 @@ module App =
             )
         )
 
-    let program (cameraService: ICameraService option) = Program.statefulWithCmdMsg (init cameraService) update view mapCmd
+    let program = Program.statefulWithCmdMsg init update view mapCmd

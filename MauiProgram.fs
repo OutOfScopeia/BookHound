@@ -12,7 +12,7 @@ type MauiProgram =
         
         let builder =
             MauiApp.CreateBuilder()
-                .UseFabulousApp(App.program None)
+                .UseFabulousApp(App.program)
                 // Fabulous template app remnant - yeet this
                 .ConfigureFonts(fun fonts ->
                     fonts

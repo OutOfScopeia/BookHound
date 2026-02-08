@@ -12,5 +12,5 @@ type CameraFrame =
     TimestampNs : int64 }
 
 type ICameraService =
-    // abstract StartPreview : onFrame: (CameraFrame -> unit) -> obj
-    abstract AttachPreview : host: ContentView * onFrame: (CameraFrame -> unit) -> unit
+    abstract StartPreview : onFrame: (CameraFrame -> unit) -> obj
+    //abstract AttachPreview : host: ContentView * onFrame: (CameraFrame -> unit) -> unit

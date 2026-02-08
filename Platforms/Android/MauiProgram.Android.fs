@@ -9,18 +9,5 @@ open Microsoft.Maui.ApplicationModel
 module AndroidCameraRegistration =
 
     let configure (builder: MauiAppBuilder) =
-        builder.Services.AddSingleton<ICameraService>(fun sp ->
-            sp.GetRequiredService<Android.App.Activity>()
-            |> AndroidCameraService
-            :> ICameraService
-        )
-        
-        // old
-        // builder.Services.AddSingleton<ICameraService>(fun _ ->
-        //     Platform.CurrentActivity
-        //     |> AndroidCameraService
-        //     :> ICameraService
-        // )
-        
+        builder.Services.AddSingleton<ICameraService, AndroidCameraService>()
         |> ignore
-

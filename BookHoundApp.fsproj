@@ -53,6 +53,7 @@
 <!-- MauiProgram.Android.fs -> MauiProgram.fs -> MainApplication.fs -->
   <ItemGroup>
     <Compile Include="Camera.fs" />
+    <!-- <Compile Include="$(AndroidProjectFolder)CameraPreview.fs"      Condition="'$(TargetFramework)' == 'net9.0-android'"/> -->
     <Compile Include="App.fs" />
     <Compile Include="$(AndroidProjectFolder)CameraAnalyzer.fs"      Condition="'$(TargetFramework)' == 'net9.0-android'"/>
     <Compile Include="$(AndroidProjectFolder)CameraStartup.fs"       Condition="'$(TargetFramework)' == 'net9.0-android'"/>

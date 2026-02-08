@@ -1,5 +1,7 @@
 namespace BookHoundApp.Camera
 
+open Microsoft.Maui.Controls
+
 // chatgpt
 type CameraFrame =
   { Width  : int
@@ -10,5 +12,5 @@ type CameraFrame =
     TimestampNs : int64 }
 
 type ICameraService =
-    abstract StartPreview :
-        onFrame: (CameraFrame -> unit) -> obj
+    // abstract StartPreview : onFrame: (CameraFrame -> unit) -> obj
+    abstract AttachPreview : host: ContentView * onFrame: (CameraFrame -> unit) -> unit

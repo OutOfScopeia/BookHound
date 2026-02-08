@@ -34,7 +34,8 @@ module CameraStartup =
                 )
 
                 // let cameraSelector =
-                //     CameraSelector.Builder()
+                //     let sel = new CameraSelector.Builder()
+                //     sel
                 //         .RequireLensFacing(CameraSelector.LensFacingBack)
                 //         .Build()
 

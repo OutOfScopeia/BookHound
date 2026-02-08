@@ -13,6 +13,7 @@ open Microsoft.Maui.Platform
 open Microsoft.Maui.Controls
 open Microsoft.Extensions.DependencyInjection
 open BookHoundApp.Camera
+// open BookHoundApp.Camera.Android
 
 open type Fabulous.Maui.View
 
@@ -23,6 +24,7 @@ module App =
     
     type Model = {
         CameraService : ICameraService option
+        // CameraPreview : CameraPreviewView option
         HasCameraPermissions: bool
         TrackedString: string
         Photos: FileResult list
@@ -36,14 +38,17 @@ module App =
         | PhotoCaptured of FileResult option
         | UpdateCameraPermStatusClicked
         | CameraPermissionStatusObtained of bool
+        | CameraServiceObtained of ICameraService option
 
     type CmdMsg =
         | UpdateCameraPermStatus
+        | GetCameraService
         | CapturePhoto
         // remove
         | SemanticAnnounce of string
 
-    let cameraViewRef = ViewRef<obj>()
+    // let cameraViewRef = ViewRef<obj>()
+    let cameraHostRef = ViewRef<ContentView>()
 
     let ensureCameraPermissionAsync() =
         task {
@@ -76,7 +81,20 @@ module App =
 
         }
         |> Cmd.ofTaskMsg
-            
+    
+    let tryGetCameraService () =
+        task {
+            let cs =
+                Application.Current
+                |> Option.ofObj
+                |> Option.bind (fun app ->
+                    app.Handler.MauiContext
+                    |> Option.ofObj
+                    |> Option.map (fun ctx -> ctx.Services.GetService<ICameraService>())
+                    )
+            return CameraServiceObtained cs
+        }
+        |> Cmd.ofTaskMsg
             
     let semanticAnnounce text =
         Cmd.ofSub(fun _ -> SemanticScreenReader.Announce(text))
@@ -91,6 +109,7 @@ module App =
     let mapCmd cmdMsg =
         match cmdMsg with
         | UpdateCameraPermStatus -> updateCameraPermStatus ()
+        | GetCameraService -> tryGetCameraService ()
         | CapturePhoto -> capturePhoto ()
         // remove
         | SemanticAnnounce text -> semanticAnnounce text
@@ -98,6 +117,7 @@ module App =
     let init (cameraService : ICameraService option) () =
         {
             CameraService = cameraService
+            // CameraPreview = None
             HasCameraPermissions = false
             Photos = []
             TrackedString = null
@@ -105,73 +125,50 @@ module App =
 
     let update msg model =
         match msg with
-        
-        | TargetStringChanged s -> model, [ SemanticAnnounce $"Clicked times" ]
-        | TargetStringEntered    -> model, [ SemanticAnnounce $"Clicked times" ]
-        | TargetStringRecognised -> model, [ SemanticAnnounce $"Clicked times" ]
-        
-        | CapturePhotoClicked -> model, [ CapturePhoto ]
+        | TargetStringChanged s          -> model, [ SemanticAnnounce $"Clicked times" ]
+        | TargetStringEntered                     -> model, [ SemanticAnnounce $"Clicked times" ]
+        | TargetStringRecognised                  -> model, [ SemanticAnnounce $"Clicked times" ]
+        | CapturePhotoClicked                     -> model, [ CapturePhoto ]
         | PhotoCaptured (Some photo) -> { model with Photos = photo :: model.Photos }, []
-        | PhotoCaptured None -> model, []
-        | UpdateCameraPermStatusClicked -> model, [ UpdateCameraPermStatus ]
-        | CameraPermissionStatusObtained status -> { model with HasCameraPermissions = status }, []
+        | PhotoCaptured None                      -> model, []
+        | UpdateCameraPermStatusClicked           -> model, [ UpdateCameraPermStatus ]
+        | CameraPermissionStatusObtained status ->
+            let cmds = if status = model.HasCameraPermissions then [] else [ GetCameraService ]
+            { model with HasCameraPermissions = status }, cmds
 
 
-    // let cameraPreviewView () =
-    // View.AndroidView(
-    //     create = (fun context ->
-    //         let previewView = new PreviewView(context)
-    //         previewView
-    //     ),
-    //     update = (fun previewView ->
-    //         let activity =
-    //             previewView.Context :?> Android.App.Activity
+        | CameraServiceObtained (Some cs) ->
+            match cameraHostRef.TryValue with
+            | Some host when host.Content = null ->
+                cs.AttachPreview(
+                    host,
+                    fun frame ->
+                        // frames arrive here 🎥🔥
+                        ()
+                )
+            | _ -> ()
 
-    //         CameraStartup.startCamera
-    //             previewView.Context
-    //             activity
-    //             previewView
-    //             (fun frame ->
-    //                 // 🔥 You get ~10–30 fps here
-    //                 ()
-    //             )
-    //     )
-    // let getCameraService () =
-    //     Application.Current.Services.GetService<ICameraService>()
+            { model with CameraService = Some cs }, []
 
-    let tryGetCameraService () =
-        Application.Current
-        |> Option.ofObj
-        |> Option.bind (fun app ->
-            app.Handler.MauiContext
-            |> Option.ofObj
-            |> Option.map (fun ctx -> ctx.Services.GetService<ICameraService>())
-        )
-
+        
     let view model =
+
         Application(
             ContentPage(
                     (VStack(spacing = 25.) {
-                        // // 📸 CAMERA PREVIEW
-                        // View.NativeView(cameraViewRef)
-                        //     .height(300.)
-                        //     .width(300.)
-                        //     .backgroundColor(Colors.Black)
+                        // View.NativeView
+                        // View.PlatformView
+                        // View.AndroidView
 
-                        match tryGetCameraService() with
-                        | Some camera ->
-                            ViewElement.AndroidView(
-                                create = fun _ ->
-                                    camera.StartPreview(fun frame ->
-                                        // you now have CameraFrame here 🎉
-                                        ()
-                                    ),
-                                update = fun _ _ -> ()
-                            )
-                            .height(300.)
+                        match model.CameraService with
+                        | Some _ ->
+                            ContentView(Label "Camera loading…")
+                                .reference(cameraHostRef)
+                                .height(300.)
+                                .centerHorizontal()
+
                         | None ->
-                            Label("Camera not available")
-
+                            Label("Camera service not available").centerHorizontal()
 
                         Label($"Camera perm: {model.HasCameraPermissions}")
                             .semantics(SemanticHeadingLevel.Level1)

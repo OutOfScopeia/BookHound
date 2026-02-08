@@ -24,8 +24,7 @@ module App =
     
     type Model = {
         CameraService : ICameraService option
-        // CameraPreview : CameraPreviewView option
-        HasCameraPermissions: bool
+        CameraAttached : bool
         TrackedString: string
         Photos: FileResult list
      }
@@ -36,12 +35,9 @@ module App =
         | TargetStringRecognised
         | CapturePhotoClicked
         | PhotoCaptured of FileResult option
-        | UpdateCameraPermStatusClicked
-        | CameraPermissionStatusObtained of bool
         | CameraServiceObtained of ICameraService option
 
     type CmdMsg =
-        | UpdateCameraPermStatus
         | GetCameraService
         | CapturePhoto
         // remove
@@ -99,16 +95,8 @@ module App =
     let semanticAnnounce text =
         Cmd.ofSub(fun _ -> SemanticScreenReader.Announce(text))
 
-    let updateCameraPermStatus () =
-        task {
-            let! hasPerm = ensureCameraPermissionAsync()
-            return CameraPermissionStatusObtained hasPerm
-        }
-        |> Cmd.ofTaskMsg
-
     let mapCmd cmdMsg =
         match cmdMsg with
-        | UpdateCameraPermStatus -> updateCameraPermStatus ()
         | GetCameraService -> tryGetCameraService ()
         | CapturePhoto -> capturePhoto ()
         // remove
@@ -117,35 +105,42 @@ module App =
     let init () =
         {
             CameraService = None
-            // CameraPreview = None
-            HasCameraPermissions = false
+            CameraAttached = false
             Photos = []
             TrackedString = null
-        }, [ UpdateCameraPermStatus ]
+        }, [ GetCameraService ]
 
     let update msg model =
         match msg with
-        | TargetStringChanged s          -> model, [ SemanticAnnounce $"Clicked times" ]
-        | TargetStringEntered                     -> model, [ SemanticAnnounce $"Clicked times" ]
-        | TargetStringRecognised                  -> model, [ SemanticAnnounce $"Clicked times" ]
+        | TargetStringChanged s          -> { model with TrackedString = s}, []
+        | TargetStringEntered                     -> model, [ GetCameraService ]
+        | TargetStringRecognised                  -> model, []
         | CapturePhotoClicked                     -> model, [ CapturePhoto ]
         | PhotoCaptured (Some photo) -> { model with Photos = photo :: model.Photos }, []
         | PhotoCaptured None                      -> model, []
-        | UpdateCameraPermStatusClicked           -> model, [ UpdateCameraPermStatus ]
-        | CameraPermissionStatusObtained status ->
-            let cmds = if status = model.HasCameraPermissions then [] else [ GetCameraService ]
-            { model with HasCameraPermissions = status }, cmds
 
         | CameraServiceObtained (Some cs) ->
             match cameraHostRef.TryValue with
-            | Some host when host.Content = null ->
-                let preview = cs.StartPreview(fun frame -> ())
+            | Some host ->
+                let preview =
+                    cs.StartPreview(fun frame ->
+                        // camera frames arrive here
+                        ()
+                    )
                 host.Content <- preview :?> View
             | _ -> ()
-
-            { model with CameraService = Some cs }, []
-
         
+            { model with CameraService = Some cs; CameraAttached = true }, []
+
+        | CameraServiceObtained None -> model, []
+
+        // | CameraServiceObtained (Some cs) ->
+        //     match cameraHostRef.TryValue with
+        //     | Some host when host.Content = null ->
+        //         let preview = cs.StartPreview(fun frame -> ())
+        //         host.Content <- preview :?> View
+        //     | _ -> ()
+
     let view model =
 
         Application(
@@ -157,20 +152,14 @@ module App =
 
                         match model.CameraService with
                         | Some _ ->
-                            ContentView(Label "Camera loading…")
+                            ContentView(Label("Camera loading…").centerHorizontal().centerVertical())
                                 .reference(cameraHostRef)
                                 .height(300.)
+                                .width(300.)
                                 .centerHorizontal()
 
                         | None ->
                             Label("Camera service not available").centerHorizontal()
-
-                        Label($"Camera perm: {model.HasCameraPermissions}")
-                            .semantics(SemanticHeadingLevel.Level1)
-                            .font(size = 24.)
-                            .textColor(if model.HasCameraPermissions then Colors.Green else Colors.Red)
-                            .centerTextHorizontal()
-                            .centerHorizontal()
 
                         Label("Enter the string to scan for")
                             .semantics(SemanticHeadingLevel.Level1)
@@ -197,10 +186,6 @@ module App =
                         Button("Capture Photo", CapturePhotoClicked)
                             .semantics(hint = "Take a photo")
                             .centerHorizontal()    
-                        
-                        Button("Update Camera Perm Status", UpdateCameraPermStatusClicked)
-                            .semantics(hint = "bool")
-                            .centerHorizontal()
                     })
                         .padding(30., 0., 30., 0.)
                         .centerVertical()

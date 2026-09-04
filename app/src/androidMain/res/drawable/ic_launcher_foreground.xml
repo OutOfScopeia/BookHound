@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Left book (leather tan) -->
+    <path
+        android:fillColor="#B08D57"
+        android:pathData="M20,30 h16 v62 h-16 z" />
+    <path
+        android:fillColor="#002147"
+        android:pathData="M20,34 h16 v2 h-16 zM20,86 h16 v2 h-16 z" />
+    <!-- Left spine call number, styled after "P.7.b" -->
+    <path
+        android:fillColor="#002147"
+        android:pathData="M27,54 h3 v2 h-3 z
+                          M28,57 h1 v1 h-1 z
+                          M28,59 h2 v2 h-2 z
+                          M28,62 h1 v1 h-1 z
+                          M27,64 h3 v2 h-3 z" />
+
+    <!-- Right book (Cambridge green) -->
+    <path
+        android:fillColor="#4A5D3A"
+        android:pathData="M72,30 h16 v62 h-16 z" />
+    <path
+        android:fillColor="#002147"
+        android:pathData="M72,34 h16 v2 h-16 zM72,86 h16 v2 h-16 z" />
+    <!-- Right spine call number, styled after "L.15.9" -->
+    <path
+        android:fillColor="#F5F0E1"
+        android:pathData="M79,52 h2 v2 h-2 z
+                          M80,55 h1 v1 h-1 z
+                          M80,57 h1 v2 h-1 z
+                          M79,60 h3 v2 h-3 z
+                          M80,63 h1 v1 h-1 z
+                          M79,65 h3 v2 h-3 z" />
+
+    <!-- Center book (cream, taller — the highlighted target) -->
+    <path
+        android:fillColor="#F5F0E1"
+        android:pathData="M40,22 h28 v70 h-28 z" />
+    <!-- Center book decorative bands -->
+    <path
+        android:fillColor="#002147"
+        android:pathData="M40,26 h28 v3 h-28 zM40,31 h28 v1 h-28 zM40,84 h28 v3 h-28 zM40,89 h28 v1 h-28 z" />
+
+    <!-- Classification-code label (Cambridge yellow highlight) -->
+    <path
+        android:fillColor="#FFD200"
+        android:pathData="M42,50 h24 v22 h-24 z" />
+    <path
+        android:strokeColor="#002147"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"
+        android:pathData="M42,50 h24 v22 h-24 z" />
+    <!-- Vertical call-number glyphs on the label, styled after "Ref.8.104" -->
+    <path
+        android:fillColor="#002147"
+        android:pathData="M52,52 h4 v2 h-4 z
+                          M52,55 h3 v2 h-3 z
+                          M53,58 h2 v2 h-2 z
+                          M54,60 h1 v1 h-1 z
+                          M52,61 h3 v2 h-3 z
+                          M54,63 h1 v1 h-1 z
+                          M54,64 h1 v2 h-1 z
+                          M52,67 h3 v2 h-3 z
+                          M52,70 h3 v2 h-3 z" />
+
+    <!-- Viewfinder corner brackets around the highlighted book -->
+    <path
+        android:fillColor="#FFE500"
+        android:pathData="M32,16 h12 v3 h-9 v9 h-3 z
+                          M64,16 h12 v12 h-3 v-9 h-9 z
+                          M32,98 v-12 h3 v9 h9 v3 z
+                          M76,98 h-12 v-3 h9 v-9 h3 z" />
+</vector>

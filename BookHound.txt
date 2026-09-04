@@ -1,0 +1,19 @@
+BookHound
+
+Create a mobile app in Kotlin Multiplatform, targeting Android 12 and later.
+
+The app should provide an input field where the user can enter a search string.
+
+The app should be able to access the phone's camera feed and use an OCR library to detect the specified string within the live camera stream.
+
+When the searched string is detected, the app should notify the user using haptic feedback.
+
+Add a toggle button to control the camera flash, as well as a slider to adjust the camera focus.
+
+The primary focus should be the Android application, but feel free to implement an iOS version as well, if feasible.
+
+When the string is detected, highlight it in the camera preview using a yellow overlay box. Ensure that the overlay is limited to the detected search string itself rather than the entire line of text.
+
+Generate an appropriate app icon that reflects the app's purpose: helping users locate a specific book on a shelf by identifying its classification code on the book's spine while scanning the shelf with a smartphone camera.
+
+You may draw additional inspiration from the Cambridge University Library, as that is where the idea for this app was originally conceived.

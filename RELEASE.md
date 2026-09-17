@@ -12,11 +12,13 @@ $env:JAVA_HOME = 'C:\Program Files\Microsoft\jdk-17.0.20.101-hotspot'
     -keyalg RSA -keysize 2048 -validity 10000
 ```
 
+Modern `keytool` (Java 9+) writes a **PKCS12** keystore regardless of the `.jks` extension, which uses **one password** for both the store and the key entry. You'll only be prompted once (entered twice for confirmation). Keep that password — you'll need it below.
+
 ## 2. Wire up signing
 
 ```powershell
 Copy-Item keystore.properties.template keystore.properties
-notepad keystore.properties   # fill in the two passwords + path
+notepad keystore.properties   # fill in the password (same value in both fields) + path
 ```
 
 `keystore.properties` and `*.jks` are gitignored.

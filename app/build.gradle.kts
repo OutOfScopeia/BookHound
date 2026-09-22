@@ -51,13 +51,13 @@ kotlin {
 }
 
 android {
-    namespace = "dev.bookhound.kmp"
-    compileSdk = 35
+    namespace = "com.outofscopia.bookhound"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "dev.bookhound.kmp"
+        applicationId = "com.outofscopia.bookhound"
         minSdk = 31
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }

@@ -1,4 +1,4 @@
-package dev.bookhound.kmp
+package com.outofscopia.bookhound
 
 import android.Manifest
 import android.content.pm.PackageManager

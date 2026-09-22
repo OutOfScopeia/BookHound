@@ -34,7 +34,7 @@ leave the phone.
 │   ├── proguard-rules.pro              # ML Kit / CameraX keep rules
 │   └── src/androidMain/
 │       ├── AndroidManifest.xml         # CAMERA + VIBRATE, adaptive icon
-│       ├── kotlin/dev/bookhound/kmp/
+│       ├── kotlin/com/outofscopia/bookhound/
 │       │   ├── MainActivity.kt         # single-activity host
 │       │   ├── BookHoundApp.kt         # MaterialTheme + dynamic colors
 │       │   ├── CameraOcrScreen.kt      # CameraX preview + overlay + controls

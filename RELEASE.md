@@ -44,7 +44,7 @@ Output: `app/build/outputs/bundle/release/app-release.aab`.
 
 ```powershell
 .\gradlew.bat :app:installRelease
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s RFCY11JWE3J shell am start -n dev.bookhound.kmp/dev.bookhound.kmp.MainActivity
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s RFCY11JWE3J shell am start -n com.outofscopia.bookhound/com.outofscopia.bookhound.MainActivity
 ```
 
 R8 is enabled — verify camera preview, OCR highlights, and vibrate work exactly like debug. If anything breaks, the ProGuard config in `app/proguard-rules.pro` is the first thing to check.

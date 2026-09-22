@@ -13,4 +13,4 @@
 -dontwarn kotlinx.coroutines.debug.**
 
 # Keep the launcher activity so intent resolution still works after R8 renaming.
--keep class dev.bookhound.kmp.MainActivity { *; }
+-keep class com.outofscopia.bookhound.MainActivity { *; }
